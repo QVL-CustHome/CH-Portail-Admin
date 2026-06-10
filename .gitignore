@@ -7,9 +7,10 @@ dist/
 # Couverture de tests
 coverage/
 
-# Env (secrets - jamais commites)
+# Env (secrets — jamais commités)
 .env
-.env.local
+.env.*
+!.env.example
 
 # Logs
 *.log
