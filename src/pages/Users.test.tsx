@@ -89,7 +89,7 @@ describe("Page Utilisateurs", () => {
     await screen.findByText("attente@test.fr");
 
     await user.click(screen.getByRole("button", { name: "Éditer" }));
-    await user.click(await screen.findByRole("combobox"));
+    await user.click(await screen.findByText("Ajouter un rôle…"));
     await user.click(await screen.findByRole("option", { name: "admin" }));
     await user.click(screen.getByRole("button", { name: "Enregistrer" }));
 
