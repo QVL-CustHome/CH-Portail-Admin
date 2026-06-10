@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@custhome/ui": "github:QVL-CustHome/CH-UI-Library#v0.2.0",
+    "ch-portail-admin": "file:",
     "express": "^5.1.0",
     "http-proxy-middleware": "^3.0.5",
     "react": "^19.1.0",
