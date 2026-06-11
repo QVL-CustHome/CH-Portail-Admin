@@ -41,8 +41,9 @@ describe("Page Rôles", () => {
     renderRoles();
     await screen.findByText("admin");
 
-    await user.type(screen.getByRole("textbox"), "editor");
     await user.click(screen.getByRole("button", { name: "Créer le rôle" }));
+    await user.type(screen.getByRole("textbox"), "editor");
+    await user.click(screen.getByRole("button", { name: "Enregistrer" }));
 
     expect(rolesApi.createRole).toHaveBeenCalledWith({ name: "editor" });
   });

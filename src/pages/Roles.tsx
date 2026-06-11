@@ -1,16 +1,15 @@
 import {
-  Button,
-  Card,
+  AddButton,
   ConfirmDialog,
   DataTable,
   Feedback,
-  Form,
   IconActionButton,
   InputText,
   PageContent,
   useTranslation,
   type ChColumn,
 } from "@custhome/ui";
+import { useState } from "react";
 import type { Role } from "../api/roles";
 import { useRoles } from "../hooks/useRoles";
 import { useRoleCreateForm } from "../hooks/useRoleCreateForm";
@@ -22,10 +21,21 @@ export default function Roles() {
 
   const form = useRoleCreateForm(create);
   const del = useConfirmDelete<Role>(async (role) => { await remove(role.id); });
+  const [adding, setAdding] = useState(false);
 
   const columns: ChColumn<Role>[] = [
     { key: "name", header: t("admin.roles.col.name"), sortable: true },
   ];
+
+  const cancelAdd = () => {
+    setAdding(false);
+    form.setName("");
+  };
+
+  const submitAdd = async () => {
+    const ok = await form.submit();
+    if (ok) setAdding(false);
+  };
 
   return (
     <PageContent title={t("admin.roles.title")}>
@@ -35,12 +45,6 @@ export default function Roles() {
           {feedback.message}
         </Feedback>
       )}
-
-      <Card title={t("admin.roles.createTitle")}>
-        <Form onSubmit={form.submit} submitLabel={t("admin.roles.create")} loading={form.busy}>
-          <InputText label={t("admin.roles.field.name")} value={form.name} onChange={form.setName} required />
-        </Form>
-      </Card>
 
       <DataTable
         columns={columns}
@@ -52,6 +56,39 @@ export default function Roles() {
           <IconActionButton icon="trash" variant="danger" aria-label={t("admin.roles.action.delete")} onClick={() => del.request(role)} />
         )}
       />
+
+      {adding ? (
+        <form
+          onSubmit={(e) => { e.preventDefault(); void submitAdd(); }}
+          style={{ display: "flex", alignItems: "flex-end", gap: "0.75rem", marginTop: "1rem" }}
+        >
+          <div style={{ flex: 1 }}>
+            <InputText
+              label={t("admin.roles.field.name")}
+              value={form.name}
+              onChange={form.setName}
+              required
+            />
+          </div>
+          <IconActionButton
+            icon="cancel"
+            variant="secondary"
+            aria-label={t("admin.cancel")}
+            onClick={cancelAdd}
+            disabled={form.busy}
+          />
+          <IconActionButton
+            icon="save"
+            aria-label={t("admin.save")}
+            onClick={() => void submitAdd()}
+            disabled={form.busy}
+          />
+        </form>
+      ) : (
+        <div style={{ marginTop: "1rem" }}>
+          <AddButton aria-label={t("admin.roles.create")} onClick={() => setAdding(true)} />
+        </div>
+      )}
 
       <ConfirmDialog
         open={del.target !== null}

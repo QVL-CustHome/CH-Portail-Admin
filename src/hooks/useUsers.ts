@@ -23,6 +23,7 @@ export function useUsers() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<UsersFeedback | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -58,9 +59,20 @@ export function useUsers() {
   );
 
   const setStatus = useCallback(
-    (id: string, status: AccountStatus) =>
-      run(() => updateUserStatus(id, status), "admin.users.statusUpdated"),
-    [run]
+    async (user: AdminUser, status: AccountStatus): Promise<boolean> => {
+      try {
+        await updateUserStatus(user.user_id, status);
+        await reload();
+        const key = status === "active" ? "admin.users.activated" : "admin.users.disabled";
+        setToast(`${user.name} ${t(key)}`);
+        return true;
+      } catch (err) {
+        const message = err instanceof ApiError ? err.message : t("admin.users.actionError");
+        setFeedback({ severity: "error", message });
+        return false;
+      }
+    },
+    [reload, t]
   );
 
   const editUser = useCallback(
@@ -92,6 +104,8 @@ export function useUsers() {
     loadError,
     feedback,
     setFeedback,
+    toast,
+    setToast,
     reload,
     setStatus,
     editUser,
