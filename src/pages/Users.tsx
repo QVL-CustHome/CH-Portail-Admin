@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   ConfirmDialog,
   DataTable,
@@ -12,6 +11,7 @@ import {
   MultiSelect,
   PageContent,
   StatusChip,
+  Toggle,
   useTranslation,
   type ChColumn,
 } from "@custhome/ui";
@@ -30,16 +30,18 @@ export default function Users() {
   const del = useConfirmDelete<AdminUser>(async (user) => { await remove(user.user_id); });
 
   const columns: ChColumn<AdminUser>[] = [
-    { key: "name", header: t("admin.users.col.name"), sortable: true },
-    { key: "email", header: t("admin.users.col.email"), sortable: true },
+    { key: "name", header: t("admin.users.col.name"), sortable: true, width: "20%" },
+    { key: "email", header: t("admin.users.col.email"), sortable: true, width: "25%" },
     {
       key: "status",
       header: t("admin.users.col.status"),
+      width: "15%",
       render: (u) => <StatusChip tone={statusTone[u.status]} label={t(`admin.status.${u.status}`)} />,
     },
     {
       key: "roles",
       header: t("admin.users.col.roles"),
+      width: "20%",
       render: (u) => (u.roles.length ? u.roles.join(", ") : t("admin.users.noRoles")),
     },
   ];
@@ -55,7 +57,7 @@ export default function Users() {
 
       {edit.editing && (
         <Card title={t("admin.users.editTitle")}>
-          <Form onSubmit={edit.submitEdit} submitLabel={t("admin.save")} loading={edit.busy}>
+          <Form onSubmit={edit.submitEdit} loading={edit.busy}>
             <InputText
               label={t("admin.users.col.name")}
               value={edit.form.name}
@@ -81,12 +83,11 @@ export default function Users() {
               value={edit.form.roles}
               onChange={edit.form.setRoles}
             />
+            <div className="admin-actions">
+              <IconActionButton icon="cancel" variant="secondary" aria-label={t("admin.cancel")} onClick={edit.cancelEdit} />
+              <IconActionButton icon="save" aria-label={t("admin.save")} onClick={edit.submitEdit} />
+            </div>
           </Form>
-          <div className="admin-actions">
-            <Button variant="secondary" onClick={edit.cancelEdit} disabled={edit.busy}>
-              {t("admin.cancel")}
-            </Button>
-          </div>
         </Card>
       )}
 
@@ -96,23 +97,18 @@ export default function Users() {
         getRowKey={(u) => u.user_id}
         loading={loading}
         emptyMessage={t("admin.users.empty")}
+        fixedLayout
+        actionsHeader={t("admin.users.col.actions")}
+        actionsWidth="20%"
         actions={(user) => (
           <div className="admin-actions">
-            {user.status === "pending_validation" && (
-              <Button size="small" onClick={() => setStatus(user.user_id, "active")}>
-                {t("admin.users.action.validate")}
-              </Button>
-            )}
-            {user.status === "active" && (
-              <Button size="small" variant="secondary" onClick={() => setStatus(user.user_id, "disabled")}>
-                {t("admin.users.action.disable")}
-              </Button>
-            )}
-            {user.status === "disabled" && (
-              <Button size="small" onClick={() => setStatus(user.user_id, "active")}>
-                {t("admin.users.action.activate")}
-              </Button>
-            )}
+            <Toggle
+              checked={user.status === "active"}
+              onChange={(on) => setStatus(user.user_id, on ? "active" : "disabled")}
+              size="small"
+              color="secondary"
+              label={user.status === "active" ? t("admin.users.action.disable") : t("admin.users.action.activate")}
+            />
             <IconActionButton icon="pencil" aria-label={t("admin.users.action.edit")} onClick={() => edit.startEdit(user)} />
             <IconActionButton icon="trash" variant="danger" aria-label={t("admin.users.action.delete")} onClick={() => del.request(user)} />
           </div>
