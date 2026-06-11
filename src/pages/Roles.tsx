@@ -5,6 +5,7 @@ import {
   DataTable,
   Feedback,
   Form,
+  IconActionButton,
   InputText,
   PageContent,
   useTranslation,
@@ -48,11 +49,7 @@ export default function Roles() {
         loading={loading}
         emptyMessage={t("admin.roles.empty")}
         actions={(role) => (
-          <div className="admin-actions">
-            <Button size="small" variant="danger" onClick={() => del.request(role)}>
-              {t("admin.roles.action.delete")}
-            </Button>
-          </div>
+          <IconActionButton icon="trash" variant="danger" aria-label={t("admin.roles.action.delete")} onClick={() => del.request(role)} />
         )}
       />
 

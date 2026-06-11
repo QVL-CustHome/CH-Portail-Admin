@@ -5,7 +5,7 @@ import {
   DataTable,
   Feedback,
   Form,
-  Icon,
+  IconActionButton,
   InputEmail,
   InputPassword,
   InputText,
@@ -113,12 +113,8 @@ export default function Users() {
                 {t("admin.users.action.activate")}
               </Button>
             )}
-            <Button size="small" variant="secondary" onClick={() => edit.startEdit(user)}>
-              <Icon name="pencil" size={16} title={t("admin.users.action.edit")} />
-            </Button>
-            <Button size="small" variant="danger" onClick={() => del.request(user)}>
-              <Icon name="trash" size={16} title={t("admin.users.action.delete")} />
-            </Button>
+            <IconActionButton icon="pencil" aria-label={t("admin.users.action.edit")} onClick={() => edit.startEdit(user)} />
+            <IconActionButton icon="trash" variant="danger" aria-label={t("admin.users.action.delete")} onClick={() => del.request(user)} />
           </div>
         )}
       />
