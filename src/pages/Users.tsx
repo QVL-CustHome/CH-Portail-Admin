@@ -1,16 +1,16 @@
 import {
-  Card,
-  ConfirmDialog,
   DataTable,
+  DeleteButton,
   Feedback,
-  Form,
   IconActionButton,
   InputEmail,
   InputPassword,
   InputText,
   MultiSelect,
   PageContent,
+  SidePanel,
   StatusChip,
+  Toast,
   Toggle,
   useTranslation,
   type ChColumn,
@@ -19,30 +19,49 @@ import type { AdminUser } from "../api/admin";
 import { statusTone } from "../lib/status";
 import { useUsers } from "../hooks/useUsers";
 import { useUserEditForm } from "../hooks/useUserEditForm";
-import { useConfirmDelete } from "../hooks/useConfirmDelete";
 
 export default function Users() {
   const { t } = useTranslation();
-  const { users, loading, loadError, feedback, setFeedback, setStatus, editUser, assignRoles, changePassword, remove } =
+  const { users, loading, loadError, feedback, setFeedback, toast, setToast, setStatus, editUser, assignRoles, changePassword, remove } =
     useUsers();
 
   const edit = useUserEditForm({ editUser, assignRoles, changePassword });
-  const del = useConfirmDelete<AdminUser>(async (user) => { await remove(user.user_id); });
+
+  const handleDeleteUser = async () => {
+    if (!edit.editing) return;
+    const ok = await remove(edit.editing.user_id);
+    if (ok) edit.cancelEdit();
+  };
 
   const columns: ChColumn<AdminUser>[] = [
-    { key: "name", header: t("admin.users.col.name"), sortable: true, width: "20%" },
-    { key: "email", header: t("admin.users.col.email"), sortable: true, width: "25%" },
+    { key: "name", header: t("admin.users.col.name"), sortable: true, width: "18%" },
+    { key: "email", header: t("admin.users.col.email"), sortable: true, width: "24%" },
     {
       key: "status",
       header: t("admin.users.col.status"),
-      width: "15%",
+      width: "13%",
       render: (u) => <StatusChip tone={statusTone[u.status]} label={t(`admin.status.${u.status}`)} />,
     },
     {
       key: "roles",
       header: t("admin.users.col.roles"),
-      width: "20%",
+      width: "21%",
       render: (u) => (u.roles.length ? u.roles.join(", ") : t("admin.users.noRoles")),
+    },
+    {
+      key: "active",
+      header: t("admin.users.col.active"),
+      width: "14%",
+      align: "center",
+      render: (u) => (
+        <Toggle
+          checked={u.status === "active"}
+          onChange={(on) => setStatus(u, on ? "active" : "disabled")}
+          size="small"
+          color="accent"
+          label={u.status === "active" ? t("admin.users.action.disable") : t("admin.users.action.activate")}
+        />
+      ),
     },
   ];
 
@@ -55,41 +74,56 @@ export default function Users() {
         </Feedback>
       )}
 
-      {edit.editing && (
-        <Card title={t("admin.users.editTitle")}>
-          <Form onSubmit={edit.submitEdit} loading={edit.busy}>
-            <InputText
-              label={t("admin.users.col.name")}
-              value={edit.form.name}
-              onChange={edit.form.setName}
-              required
+      <SidePanel
+        open={edit.editing !== null}
+        onClose={edit.cancelEdit}
+        title={t("admin.users.editTitle")}
+        footer={
+          <div className="admin-actions" style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
+            <IconActionButton icon="save" aria-label={t("admin.save")} onClick={edit.submitEdit} disabled={edit.busy} />
+            <DeleteButton
+              aria-label={t("admin.users.action.delete")}
+              confirmTitle={edit.editing ? `${t("admin.users.action.delete")} ${edit.editing.name} ?` : undefined}
+              confirmMessage={t("admin.users.deleteMessage")}
+              confirmLabel={t("admin.confirm")}
+              cancelLabel={t("admin.cancel")}
+              disabled={edit.busy}
+              onConfirm={handleDeleteUser}
             />
-            <InputEmail
-              label={t("admin.users.col.email")}
-              value={edit.form.email}
-              onChange={edit.form.setEmail}
-              required
-            />
-            <InputPassword
-              label={t("admin.users.passwordLabel")}
-              value={edit.form.password}
-              onChange={edit.form.setPassword}
-              autoComplete="new-password"
-            />
-            <MultiSelect
-              label={t("admin.users.roleLabel")}
-              placeholder={t("admin.users.roleSelectPlaceholder")}
-              options={edit.catalogue.map((role) => ({ value: role.name }))}
-              value={edit.form.roles}
-              onChange={edit.form.setRoles}
-            />
-            <div className="admin-actions">
-              <IconActionButton icon="cancel" variant="secondary" aria-label={t("admin.cancel")} onClick={edit.cancelEdit} />
-              <IconActionButton icon="save" aria-label={t("admin.save")} onClick={edit.submitEdit} />
-            </div>
-          </Form>
-        </Card>
-      )}
+          </div>
+        }
+      >
+        <form
+          onSubmit={(e) => { e.preventDefault(); void edit.submitEdit(); }}
+          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+        >
+          <InputText
+            label={t("admin.users.col.name")}
+            value={edit.form.name}
+            onChange={edit.form.setName}
+            required
+          />
+          <InputEmail
+            label={t("admin.users.col.email")}
+            value={edit.form.email}
+            onChange={edit.form.setEmail}
+            required
+          />
+          <InputPassword
+            label={t("admin.users.passwordLabel")}
+            value={edit.form.password}
+            onChange={edit.form.setPassword}
+            autoComplete="new-password"
+          />
+          <MultiSelect
+            label={t("admin.users.roleLabel")}
+            placeholder={t("admin.users.roleSelectPlaceholder")}
+            options={edit.catalogue.map((role) => ({ value: role.name }))}
+            value={edit.form.roles}
+            onChange={edit.form.setRoles}
+          />
+        </form>
+      </SidePanel>
 
       <DataTable
         columns={columns}
@@ -98,34 +132,15 @@ export default function Users() {
         loading={loading}
         emptyMessage={t("admin.users.empty")}
         fixedLayout
-        actionsHeader={t("admin.users.col.actions")}
-        actionsWidth="20%"
+        actionsWidth="10%"
         actions={(user) => (
           <div className="admin-actions">
-            <Toggle
-              checked={user.status === "active"}
-              onChange={(on) => setStatus(user.user_id, on ? "active" : "disabled")}
-              size="small"
-              color="secondary"
-              label={user.status === "active" ? t("admin.users.action.disable") : t("admin.users.action.activate")}
-            />
             <IconActionButton icon="pencil" aria-label={t("admin.users.action.edit")} onClick={() => edit.startEdit(user)} />
-            <IconActionButton icon="trash" variant="danger" aria-label={t("admin.users.action.delete")} onClick={() => del.request(user)} />
           </div>
         )}
       />
 
-      <ConfirmDialog
-        open={del.target !== null}
-        title={t("admin.users.deleteTitle")}
-        message={del.target ? `${t("admin.users.deleteMessage")} (${del.target.email})` : undefined}
-        confirmLabel={t("admin.confirm")}
-        cancelLabel={t("admin.cancel")}
-        destructive
-        loading={del.busy}
-        onConfirm={del.confirm}
-        onCancel={del.cancel}
-      />
+      <Toast open={toast !== null} message={toast ?? ""} onClose={() => setToast(null)} />
     </PageContent>
   );
 }

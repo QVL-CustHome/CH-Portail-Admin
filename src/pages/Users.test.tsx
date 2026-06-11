@@ -66,17 +66,18 @@ describe("Page Utilisateurs", () => {
 
     await user.click(screen.getByRole("switch", { name: "Activer" }));
 
-    expect(await screen.findByText("Statut mis à jour.")).toBeInTheDocument();
+    expect(await screen.findByText("Attente a été activé")).toBeInTheDocument();
     expect(adminApi.updateUserStatus).toHaveBeenCalledWith("1", "active");
   });
 
-  it("supprime un compte après confirmation", async () => {
+  it("supprime un compte après confirmation depuis le panneau d'édition", async () => {
     const user = userEvent.setup();
     renderUsers();
     await screen.findByText("attente@test.fr");
 
-    await user.click(screen.getByRole("button", { name: "Supprimer" }));
-    expect(await screen.findByText("Supprimer ce compte ?")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Éditer" }));
+    await user.click(await screen.findByRole("button", { name: "Supprimer" }));
+    expect(await screen.findByText("Supprimer Attente ?")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Confirmer" }));
     expect(adminApi.deleteUser).toHaveBeenCalledWith("1");

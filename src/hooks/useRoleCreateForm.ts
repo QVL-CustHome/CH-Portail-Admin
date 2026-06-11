@@ -10,6 +10,7 @@ export function useRoleCreateForm(create: (input: CreateRoleInput) => Promise<bo
     const ok = await create({ name });
     setBusy(false);
     if (ok) setName("");
+    return ok;
   }, [name, create]);
 
   return { name, setName, busy, submit };
