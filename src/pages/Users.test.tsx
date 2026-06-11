@@ -59,12 +59,12 @@ describe("Page Utilisateurs", () => {
     expect(screen.getByText("En attente")).toBeInTheDocument();
   });
 
-  it("valide un compte en attente", async () => {
+  it("active un compte en attente via le toggle", async () => {
     const user = userEvent.setup();
     renderUsers();
     await screen.findByText("attente@test.fr");
 
-    await user.click(screen.getByRole("button", { name: "Valider" }));
+    await user.click(screen.getByRole("switch", { name: "Activer" }));
 
     expect(await screen.findByText("Statut mis à jour.")).toBeInTheDocument();
     expect(adminApi.updateUserStatus).toHaveBeenCalledWith("1", "active");
@@ -91,7 +91,7 @@ describe("Page Utilisateurs", () => {
     await user.click(screen.getByRole("button", { name: "Éditer" }));
     await user.click(await screen.findByText("Ajouter un rôle…"));
     await user.click(await screen.findByRole("option", { name: "admin" }));
-    await user.click(screen.getByRole("button", { name: "Enregistrer" }));
+    await user.click(screen.getByLabelText("Enregistrer"));
 
     expect(adminApi.updateUserRoles).toHaveBeenCalledWith("1", ["admin"]);
   });
