@@ -7,12 +7,35 @@ export class ApiError extends Error {
   }
 }
 
-export async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`/api${path}`, {
+let refreshInFlight: Promise<boolean> | null = null;
+
+async function tryRefresh(): Promise<boolean> {
+  if (refreshInFlight) return refreshInFlight;
+  refreshInFlight = fetch("/api/auth/refresh", {
+    method: "POST",
+    credentials: "same-origin",
+  }).then((r) => r.ok).catch(() => false).finally(() => { refreshInFlight = null; });
+  return refreshInFlight;
+}
+
+async function rawFetch(path: string, init?: RequestInit): Promise<Response> {
+  return fetch(`/api${path}`, {
     headers: { "Content-Type": "application/json" },
     credentials: "same-origin",
     ...init,
   });
+}
+
+export async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  let res = await rawFetch(path, init);
+
+  if (res.status === 401) {
+    const refreshed = await tryRefresh();
+    if (refreshed) {
+      res = await rawFetch(path, init);
+    }
+  }
+
   if (!res.ok) {
     let message = `Erreur ${res.status}`;
     try {
