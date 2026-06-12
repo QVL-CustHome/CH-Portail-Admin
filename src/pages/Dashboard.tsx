@@ -10,7 +10,7 @@ export default function Dashboard() {
   const { count, loading, error } = usePendingUsers();
 
   return (
-    <PageContent title={t("admin.dashboard.title")}>
+    <PageContent hideUtilitiesOnMobile>
       <p className="admin-welcome">
         {t("admin.dashboard.welcome")} {me.email}
       </p>
