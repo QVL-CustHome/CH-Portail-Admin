@@ -9,6 +9,7 @@ export interface AdminUser {
   roles: string[];
   status: AccountStatus;
   whitelist_only: boolean;
+  allowed_ips: string[];
   created_at: string;
 }
 
@@ -65,6 +66,13 @@ export function updateUserPassword(id: string, password: string) {
   return request<void>(`/admin/users/${id}/password`, {
     method: "PUT",
     body: JSON.stringify({ password }),
+  });
+}
+
+export function updateUserWhitelist(id: string, whitelistOnly: boolean, allowedIps: string[]) {
+  return request<AdminUser>(`/admin/users/${id}/whitelist`, {
+    method: "PUT",
+    body: JSON.stringify({ whitelist_only: whitelistOnly, allowed_ips: allowedIps }),
   });
 }
 

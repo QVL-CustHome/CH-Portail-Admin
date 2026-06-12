@@ -8,6 +8,7 @@ import {
   updateUserPassword,
   updateUserRoles,
   updateUserStatus,
+  updateUserWhitelist,
   type AccountStatus,
   type AdminUser,
 } from "../api/admin";
@@ -98,6 +99,23 @@ export function useUsers() {
     [run]
   );
 
+  // Whitelist : pas de feedback de succès (modifications fréquentes — toggle,
+  // suppression d'IP) ; on recharge la liste et on remonte l'erreur éventuelle.
+  const updateWhitelist = useCallback(
+    async (id: string, whitelistOnly: boolean, allowedIps: string[]): Promise<boolean> => {
+      try {
+        await updateUserWhitelist(id, whitelistOnly, allowedIps);
+        await reload();
+        return true;
+      } catch (err) {
+        const message = err instanceof ApiError ? err.message : t("admin.users.actionError");
+        setFeedback({ severity: "error", message });
+        return false;
+      }
+    },
+    [reload, t]
+  );
+
   return {
     users,
     loading,
@@ -111,6 +129,7 @@ export function useUsers() {
     editUser,
     assignRoles,
     changePassword,
+    updateWhitelist,
     remove,
   };
 }
