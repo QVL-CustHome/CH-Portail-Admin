@@ -4,7 +4,7 @@ export const defaultLocale: ChLocale = "fr";
 
 export const messages: ChLocaleMessages = {
   fr: {
-    "admin.brand": "CustHome Admin",
+    "admin.brand": "CustHome - Portail Admin",
     "admin.loading": "Chargement",
     "admin.logout": "Se déconnecter",
     "admin.nav.label": "Navigation principale",
@@ -91,7 +91,7 @@ export const messages: ChLocaleMessages = {
     "admin.roles.deleteMessage": "Les utilisateurs concernés perdront ce rôle au prochain contrôle.",
   },
   en: {
-    "admin.brand": "CustHome Admin",
+    "admin.brand": "CustHome - Admin Portal",
     "admin.loading": "Loading",
     "admin.logout": "Sign out",
     "admin.nav.label": "Main navigation",

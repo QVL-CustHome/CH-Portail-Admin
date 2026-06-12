@@ -38,7 +38,7 @@ export default function Roles() {
   };
 
   return (
-    <PageContent title={t("admin.roles.title")}>
+    <PageContent hideUtilitiesOnMobile>
       {loadError && <Feedback severity="error">{loadError}</Feedback>}
       {feedback && (
         <Feedback severity={feedback.severity} onClose={() => setFeedback(null)}>
