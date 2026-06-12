@@ -37,12 +37,6 @@ export default function Users() {
     { key: "name", header: t("admin.users.col.name"), sortable: true, width: "18%" },
     { key: "email", header: t("admin.users.col.email"), sortable: true, width: "24%" },
     {
-      key: "status",
-      header: t("admin.users.col.status"),
-      width: "13%",
-      render: (u) => <StatusChip tone={statusTone[u.status]} label={t(`admin.status.${u.status}`)} />,
-    },
-    {
       key: "roles",
       header: t("admin.users.col.roles"),
       width: "21%",
@@ -66,7 +60,7 @@ export default function Users() {
   ];
 
   return (
-    <PageContent title={t("admin.users.title")}>
+    <PageContent hideUtilitiesOnMobile>
       {loadError && <Feedback severity="error">{loadError}</Feedback>}
       {feedback && (
         <Feedback severity={feedback.severity} onClose={() => setFeedback(null)}>
@@ -93,6 +87,16 @@ export default function Users() {
           </div>
         }
       >
+        {edit.editing && (
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+            <span style={{ fontWeight: 500 }}>{t("admin.users.col.status")}</span>
+            <StatusChip
+              tone={statusTone[edit.editing.status]}
+              label={t(`admin.status.${edit.editing.status}`)}
+            />
+          </div>
+        )}
+
         <form
           onSubmit={(e) => { e.preventDefault(); void edit.submitEdit(); }}
           style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
@@ -180,6 +184,7 @@ export default function Users() {
         emptyMessage={t("admin.users.empty")}
         fixedLayout
         actionsWidth="10%"
+        rowSx={(u) => (u.status === "disabled" ? { opacity: 0.5 } : {})}
         actions={(user) => (
           <div className="admin-actions">
             <IconActionButton icon="pencil" aria-label={t("admin.users.action.edit")} onClick={() => edit.startEdit(user)} />

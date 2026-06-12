@@ -54,10 +54,17 @@ beforeEach(() => {
 });
 
 describe("Page Utilisateurs", () => {
-  it("affiche les utilisateurs chargés avec leur statut", async () => {
+  it("affiche les utilisateurs chargés", async () => {
     renderUsers();
     expect(await screen.findByText("attente@test.fr")).toBeInTheDocument();
-    expect(screen.getByText("En attente")).toBeInTheDocument();
+  });
+
+  it("affiche le statut dans le panneau d'édition", async () => {
+    const user = userEvent.setup();
+    renderUsers();
+    await screen.findByText("attente@test.fr");
+    await user.click(screen.getByRole("button", { name: "Éditer" }));
+    expect(await screen.findByText("En attente")).toBeInTheDocument();
   });
 
   it("active un compte en attente via le toggle", async () => {
