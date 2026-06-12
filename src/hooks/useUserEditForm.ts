@@ -40,8 +40,6 @@ export function useUserEditForm(actions: UserEditActions) {
 
   const cancelEdit = useCallback(() => setEditing(null), []);
 
-  
-  
   const setWhitelistOnly = useCallback(
     async (on: boolean) => {
       if (!editing) return;

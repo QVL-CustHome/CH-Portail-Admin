@@ -99,8 +99,6 @@ export function useUsers() {
     [run]
   );
 
-  
-  
   const updateWhitelist = useCallback(
     async (id: string, whitelistOnly: boolean, allowedIps: string[]): Promise<boolean> => {
       try {
