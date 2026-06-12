@@ -99,8 +99,8 @@ export function useUsers() {
     [run]
   );
 
-  // Whitelist : pas de feedback de succès (modifications fréquentes — toggle,
-  // suppression d'IP) ; on recharge la liste et on remonte l'erreur éventuelle.
+  
+  
   const updateWhitelist = useCallback(
     async (id: string, whitelistOnly: boolean, allowedIps: string[]): Promise<boolean> => {
       try {

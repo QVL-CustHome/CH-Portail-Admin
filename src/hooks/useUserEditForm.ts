@@ -40,8 +40,8 @@ export function useUserEditForm(actions: UserEditActions) {
 
   const cancelEdit = useCallback(() => setEditing(null), []);
 
-  // Whitelist : appliquée immédiatement (le bouton Enregistrer ne concerne que
-  // nom/email/mot de passe/rôles). On ne met à jour l'état local qu'en cas de succès.
+  
+  
   const setWhitelistOnly = useCallback(
     async (on: boolean) => {
       if (!editing) return;
