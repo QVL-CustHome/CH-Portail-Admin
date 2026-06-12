@@ -6,6 +6,7 @@ interface UserEditActions {
   editUser: (id: string, name: string, email: string) => Promise<boolean>;
   assignRoles: (id: string, roles: string[]) => Promise<boolean>;
   changePassword: (id: string, password: string) => Promise<boolean>;
+  updateWhitelist: (id: string, whitelistOnly: boolean, allowedIps: string[]) => Promise<boolean>;
 }
 
 export function useUserEditForm(actions: UserEditActions) {
@@ -14,6 +15,8 @@ export function useUserEditForm(actions: UserEditActions) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [roles, setRoles] = useState<string[]>([]);
+  const [whitelistOnly, setWhitelistOnlyState] = useState(false);
+  const [allowedIps, setAllowedIps] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [catalogue, setCatalogue] = useState<Role[]>([]);
 
@@ -31,9 +34,32 @@ export function useUserEditForm(actions: UserEditActions) {
     setEmail(user.email);
     setPassword("");
     setRoles([...user.roles]);
+    setWhitelistOnlyState(user.whitelist_only);
+    setAllowedIps([...user.allowed_ips]);
   }, []);
 
   const cancelEdit = useCallback(() => setEditing(null), []);
+
+  // Whitelist : appliquée immédiatement (le bouton Enregistrer ne concerne que
+  // nom/email/mot de passe/rôles). On ne met à jour l'état local qu'en cas de succès.
+  const setWhitelistOnly = useCallback(
+    async (on: boolean) => {
+      if (!editing) return;
+      const ok = await actions.updateWhitelist(editing.user_id, on, allowedIps);
+      if (ok) setWhitelistOnlyState(on);
+    },
+    [editing, allowedIps, actions]
+  );
+
+  const removeIp = useCallback(
+    async (ip: string) => {
+      if (!editing) return;
+      const next = allowedIps.filter((entry) => entry !== ip);
+      const ok = await actions.updateWhitelist(editing.user_id, whitelistOnly, next);
+      if (ok) setAllowedIps(next);
+    },
+    [editing, allowedIps, whitelistOnly, actions]
+  );
 
   const submitEdit = useCallback(async () => {
     if (!editing) return;
@@ -55,6 +81,10 @@ export function useUserEditForm(actions: UserEditActions) {
   return {
     editing,
     form: { name, setName, email, setEmail, password, setPassword, roles, setRoles },
+    whitelistOnly,
+    allowedIps,
+    setWhitelistOnly,
+    removeIp,
     catalogue,
     busy,
     startEdit,
