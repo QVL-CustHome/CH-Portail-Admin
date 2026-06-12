@@ -22,10 +22,10 @@ import { useUserEditForm } from "../hooks/useUserEditForm";
 
 export default function Users() {
   const { t } = useTranslation();
-  const { users, loading, loadError, feedback, setFeedback, toast, setToast, setStatus, editUser, assignRoles, changePassword, remove } =
+  const { users, loading, loadError, feedback, setFeedback, toast, setToast, setStatus, editUser, assignRoles, changePassword, updateWhitelist, remove } =
     useUsers();
 
-  const edit = useUserEditForm({ editUser, assignRoles, changePassword });
+  const edit = useUserEditForm({ editUser, assignRoles, changePassword, updateWhitelist });
 
   const handleDeleteUser = async () => {
     if (!edit.editing) return;
@@ -123,6 +123,53 @@ export default function Users() {
             onChange={edit.form.setRoles}
           />
         </form>
+
+        <hr style={{ border: "none", borderTop: "1px solid var(--ch-palette-divider, #e6e3dc)", margin: "1.25rem 0" }} />
+
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}>
+          <span style={{ fontWeight: 500 }}>{t("admin.users.whitelistOnly")}</span>
+          <Toggle
+            checked={edit.whitelistOnly}
+            onChange={edit.setWhitelistOnly}
+            color="accent"
+            label={t("admin.users.whitelistOnly")}
+          />
+        </div>
+
+        <div style={{ marginTop: "1rem" }}>
+          <p style={{ fontWeight: 500, margin: "0 0 0.5rem" }}>{t("admin.users.allowedIps")}</p>
+          {edit.allowedIps.length === 0 ? (
+            <p style={{ color: "var(--ch-palette-text-secondary, #5a564e)", margin: 0 }}>
+              {t("admin.users.noIps")}
+            </p>
+          ) : (
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              {edit.allowedIps.map((ip) => (
+                <li
+                  key={ip}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "0.5rem",
+                    padding: "0.35rem 0.6rem",
+                    borderRadius: 8,
+                    background: "var(--ch-palette-background-default, #fbfaf9)",
+                  }}
+                >
+                  <span style={{ fontFamily: "monospace" }}>{ip}</span>
+                  <IconActionButton
+                    icon="close"
+                    variant="secondary"
+                    size={28}
+                    aria-label={`${t("admin.users.removeIp")} ${ip}`}
+                    onClick={() => edit.removeIp(ip)}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </SidePanel>
 
       <DataTable
