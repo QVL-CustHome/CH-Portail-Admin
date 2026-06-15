@@ -8,7 +8,10 @@ import * as adminApi from "../api/admin";
 import * as rolesApi from "../api/roles";
 
 vi.mock("../api/admin");
-vi.mock("../api/roles");
+vi.mock("../api/roles", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../api/roles")>();
+  return { ...actual, listRoles: vi.fn(), createRole: vi.fn(), deleteRole: vi.fn() };
+});
 
 const pendingUser: adminApi.AdminUser = {
   user_id: "1",
@@ -21,9 +24,11 @@ const pendingUser: adminApi.AdminUser = {
   created_at: "2026-01-01T00:00:00Z",
 };
 
-const adminRole: rolesApi.Role = {
+const subRole: rolesApi.Role = {
   id: "r1",
-  name: "admin",
+  name: "viewer",
+  portal: "admin",
+  kind: "sub",
   created_at: "2026-01-01T00:00:00Z",
 };
 
@@ -91,17 +96,29 @@ describe("Page Utilisateurs", () => {
     expect(adminApi.deleteUser).toHaveBeenCalledWith("1");
   });
 
-  it("attribue un rôle depuis l'édition de l'utilisateur", async () => {
-    vi.mocked(rolesApi.listRoles).mockResolvedValue([adminRole]);
+  it("attribue l'accès à un portail depuis l'édition", async () => {
     const user = userEvent.setup();
     renderUsers();
     await screen.findByText("attente@test.fr");
 
     await user.click(screen.getByRole("button", { name: "Éditer" }));
-    await user.click(await screen.findByText("Ajouter un rôle…"));
-    await user.click(await screen.findByRole("option", { name: "admin" }));
+    const accessToggles = await screen.findAllByRole("switch", { name: "Accès au portail" });
+    await user.click(accessToggles[0]);
     await user.click(screen.getByLabelText("Enregistrer"));
 
     expect(adminApi.updateUserRoles).toHaveBeenCalledWith("1", ["admin"]);
+  });
+
+  it("attribue un sous-rôle depuis l'édition", async () => {
+    vi.mocked(rolesApi.listRoles).mockResolvedValue([subRole]);
+    const user = userEvent.setup();
+    renderUsers();
+    await screen.findByText("attente@test.fr");
+
+    await user.click(screen.getByRole("button", { name: "Éditer" }));
+    await user.click(await screen.findByRole("checkbox", { name: "viewer" }));
+    await user.click(screen.getByLabelText("Enregistrer"));
+
+    expect(adminApi.updateUserRoles).toHaveBeenCalledWith("1", ["viewer"]);
   });
 });

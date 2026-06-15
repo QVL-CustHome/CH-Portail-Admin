@@ -1,4 +1,5 @@
 import {
+  Checkbox,
   DataTable,
   DeleteButton,
   Feedback,
@@ -6,7 +7,7 @@ import {
   InputEmail,
   InputPassword,
   InputText,
-  MultiSelect,
+  NAME_REGEX,
   PageContent,
   SidePanel,
   StatusChip,
@@ -16,16 +17,24 @@ import {
   type ChColumn,
 } from "@custhome/ui";
 import type { AdminUser } from "../api/admin";
+import { PORTALS } from "../api/roles";
 import { statusTone } from "../lib/status";
 import { useUsers } from "../hooks/useUsers";
 import { useUserEditForm } from "../hooks/useUserEditForm";
 
 export default function Users() {
   const { t } = useTranslation();
-  const { users, loading, loadError, feedback, setFeedback, toast, setToast, setStatus, editUser, assignRoles, changePassword, updateWhitelist, remove } =
+  const { users, loading, loadError, toast, setToast, setStatus, editUser, assignRoles, changePassword, updateWhitelist, remove } =
     useUsers();
 
-  const edit = useUserEditForm({ editUser, assignRoles, changePassword, updateWhitelist });
+  const edit = useUserEditForm({
+    editUser,
+    assignRoles,
+    changePassword,
+    updateWhitelist,
+    onUpdated: (name) =>
+      setToast({ severity: "success", message: `${name} ${t("admin.users.updated")}` }),
+  });
 
   const handleDeleteUser = async () => {
     if (!edit.editing) return;
@@ -33,14 +42,32 @@ export default function Users() {
     if (ok) edit.cancelEdit();
   };
 
+  const toggleRole = (roleName: string) => {
+    const has = edit.form.roles.includes(roleName);
+    edit.form.setRoles(
+      has ? edit.form.roles.filter((r) => r !== roleName) : [...edit.form.roles, roleName]
+    );
+  };
+
+  const handlePanelClose = () => {
+    setToast({ severity: "info", message: t("admin.users.unsavedChanges") });
+    edit.cancelEdit();
+  };
+
   const columns: ChColumn<AdminUser>[] = [
     { key: "name", header: t("admin.users.col.name"), sortable: true, width: "18%" },
-    { key: "email", header: t("admin.users.col.email"), sortable: true, width: "24%" },
+    { key: "email", header: t("admin.users.col.email"), sortable: true, width: "24%", hideOnMobile: true },
     {
       key: "roles",
       header: t("admin.users.col.roles"),
       width: "21%",
-      render: (u) => (u.roles.length ? u.roles.join(", ") : t("admin.users.noRoles")),
+      hideOnMobile: true,
+      render: (u) => {
+        const portalRoles = u.roles.filter((r) => (PORTALS as readonly string[]).includes(r));
+        return portalRoles.length
+          ? portalRoles.map((r) => t(`admin.portal.label.${r}`)).join(", ")
+          : t("admin.users.noPortalRoles");
+      },
     },
     {
       key: "active",
@@ -52,7 +79,7 @@ export default function Users() {
           checked={u.status === "active"}
           onChange={(on) => setStatus(u, on ? "active" : "disabled")}
           size="small"
-          color="accent"
+          color="primary"
           label={u.status === "active" ? t("admin.users.action.disable") : t("admin.users.action.activate")}
         />
       ),
@@ -62,15 +89,10 @@ export default function Users() {
   return (
     <PageContent hideUtilitiesOnMobile>
       {loadError && <Feedback severity="error">{loadError}</Feedback>}
-      {feedback && (
-        <Feedback severity={feedback.severity} onClose={() => setFeedback(null)}>
-          {feedback.message}
-        </Feedback>
-      )}
 
       <SidePanel
         open={edit.editing !== null}
-        onClose={edit.cancelEdit}
+        onClose={handlePanelClose}
         title={t("admin.users.editTitle")}
         footer={
           <div className="admin-actions" style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
@@ -106,6 +128,8 @@ export default function Users() {
             value={edit.form.name}
             onChange={edit.form.setName}
             required
+            pattern={NAME_REGEX}
+            patternMessage={t("admin.users.nameInvalid")}
           />
           <InputEmail
             label={t("admin.users.col.email")}
@@ -119,13 +143,46 @@ export default function Users() {
             onChange={edit.form.setPassword}
             autoComplete="new-password"
           />
-          <MultiSelect
-            label={t("admin.users.roleLabel")}
-            placeholder={t("admin.users.roleSelectPlaceholder")}
-            options={edit.catalogue.map((role) => ({ value: role.name }))}
-            value={edit.form.roles}
-            onChange={edit.form.setRoles}
-          />
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            {PORTALS.map((portal) => {
+              const subs = edit.catalogue.filter((r) => r.portal === portal && r.kind === "sub");
+              return (
+                <div
+                  key={portal}
+                  style={{
+                    border: "1px solid var(--ch-palette-divider, #e6e3dc)",
+                    borderRadius: 10,
+                    padding: "0.75rem",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}>
+                    <span style={{ fontWeight: 600 }}>{t(`admin.portal.label.${portal}`)}</span>
+                    <Toggle
+                      checked={edit.form.roles.includes(portal)}
+                      onChange={() => toggleRole(portal)}
+                      color="primary"
+                      label={t("admin.users.portalAccess")}
+                    />
+                  </div>
+                  {subs.length > 0 && (
+                    <div style={{ marginTop: "0.6rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                      <span style={{ fontSize: "0.85rem", color: "var(--ch-palette-text-secondary, #5a564e)" }}>
+                        {t("admin.users.subRoles")}
+                      </span>
+                      {subs.map((role) => (
+                        <Checkbox
+                          key={role.id}
+                          checked={edit.form.roles.includes(role.name)}
+                          onChange={() => toggleRole(role.name)}
+                          label={role.name}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </form>
 
         <hr style={{ border: "none", borderTop: "1px solid var(--ch-palette-divider, #e6e3dc)", margin: "1.25rem 0" }} />
@@ -135,7 +192,7 @@ export default function Users() {
           <Toggle
             checked={edit.whitelistOnly}
             onChange={edit.setWhitelistOnly}
-            color="accent"
+            color="primary"
             label={t("admin.users.whitelistOnly")}
           />
         </div>
@@ -192,7 +249,12 @@ export default function Users() {
         )}
       />
 
-      <Toast open={toast !== null} message={toast ?? ""} onClose={() => setToast(null)} />
+      <Toast
+        open={toast !== null}
+        message={toast?.message ?? ""}
+        severity={toast?.severity}
+        onClose={() => setToast(null)}
+      />
     </PageContent>
   );
 }
