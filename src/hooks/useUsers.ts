@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "@custhome/ui";
+import { apiErrorMessage, useTranslation, type ChToastSeverity } from "@custhome/ui";
 import { ApiError } from "../api/client";
 import {
   deleteUser,
@@ -13,8 +13,8 @@ import {
   type AdminUser,
 } from "../api/admin";
 
-export interface UsersFeedback {
-  severity: "success" | "error";
+export interface UsersToast {
+  severity: ChToastSeverity;
   message: string;
 }
 
@@ -23,8 +23,16 @@ export function useUsers() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<UsersFeedback | null>(null);
-  const [toast, setToast] = useState<string | null>(null);
+  const [toast, setToast] = useState<UsersToast | null>(null);
+
+  const toastError = useCallback(
+    (err: unknown) => {
+      const fallback = err instanceof ApiError ? err.message : t("admin.users.actionError");
+      const code = err instanceof ApiError ? err.code : undefined;
+      setToast({ severity: "error", message: apiErrorMessage(t, code, fallback) });
+    },
+    [t]
+  );
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -44,19 +52,24 @@ export function useUsers() {
   }, [reload]);
 
   const run = useCallback(
-    async (action: () => Promise<unknown>, successKey: string): Promise<boolean> => {
+    async (
+      action: () => Promise<unknown>,
+      successKey: string,
+      options?: { silentSuccess?: boolean }
+    ): Promise<boolean> => {
       try {
         await action();
-        setFeedback({ severity: "success", message: t(successKey) });
+        if (!options?.silentSuccess) {
+          setToast({ severity: "success", message: t(successKey) });
+        }
         await reload();
         return true;
       } catch (err) {
-        const message = err instanceof ApiError ? err.message : t("admin.users.actionError");
-        setFeedback({ severity: "error", message });
+        toastError(err);
         return false;
       }
     },
-    [reload, t]
+    [reload, t, toastError]
   );
 
   const setStatus = useCallback(
@@ -65,32 +78,31 @@ export function useUsers() {
         await updateUserStatus(user.user_id, status);
         await reload();
         const key = status === "active" ? "admin.users.activated" : "admin.users.disabled";
-        setToast(`${user.name} ${t(key)}`);
+        setToast({ severity: "success", message: `${user.name} ${t(key)}` });
         return true;
       } catch (err) {
-        const message = err instanceof ApiError ? err.message : t("admin.users.actionError");
-        setFeedback({ severity: "error", message });
+        toastError(err);
         return false;
       }
     },
-    [reload, t]
+    [reload, t, toastError]
   );
 
   const editUser = useCallback(
     (id: string, name: string, email: string) =>
-      run(() => updateUser(id, name, email), "admin.users.profileUpdated"),
+      run(() => updateUser(id, name, email), "admin.users.profileUpdated", { silentSuccess: true }),
     [run]
   );
 
   const assignRoles = useCallback(
     (id: string, roles: string[]) =>
-      run(() => updateUserRoles(id, roles), "admin.users.rolesUpdated"),
+      run(() => updateUserRoles(id, roles), "admin.users.rolesUpdated", { silentSuccess: true }),
     [run]
   );
 
   const changePassword = useCallback(
     (id: string, password: string) =>
-      run(() => updateUserPassword(id, password), "admin.users.passwordUpdated"),
+      run(() => updateUserPassword(id, password), "admin.users.passwordUpdated", { silentSuccess: true }),
     [run]
   );
 
@@ -106,20 +118,17 @@ export function useUsers() {
         await reload();
         return true;
       } catch (err) {
-        const message = err instanceof ApiError ? err.message : t("admin.users.actionError");
-        setFeedback({ severity: "error", message });
+        toastError(err);
         return false;
       }
     },
-    [reload, t]
+    [reload, toastError]
   );
 
   return {
     users,
     loading,
     loadError,
-    feedback,
-    setFeedback,
     toast,
     setToast,
     reload,
