@@ -7,6 +7,7 @@ interface UserEditActions {
   assignRoles: (id: string, roles: string[]) => Promise<boolean>;
   changePassword: (id: string, password: string) => Promise<boolean>;
   updateWhitelist: (id: string, whitelistOnly: boolean, allowedIps: string[]) => Promise<boolean>;
+  onUpdated?: (name: string) => void;
 }
 
 export function useUserEditForm(actions: UserEditActions) {
@@ -73,7 +74,10 @@ export function useUserEditForm(actions: UserEditActions) {
       ok = await actions.changePassword(editing.user_id, password);
     }
     setBusy(false);
-    if (ok) setEditing(null);
+    if (ok) {
+      actions.onUpdated?.(name);
+      setEditing(null);
+    }
   }, [editing, name, email, password, roles, actions]);
 
   return {

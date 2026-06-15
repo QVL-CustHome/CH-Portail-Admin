@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "@custhome/ui";
+import { apiErrorMessage, useTranslation, type ChToastSeverity } from "@custhome/ui";
 import { ApiError } from "../api/client";
 import { createRole, deleteRole, listRoles, type CreateRoleInput, type Role } from "../api/roles";
 
-export interface RolesFeedback {
-  severity: "success" | "error";
+export interface RolesToast {
+  severity: ChToastSeverity;
   message: string;
 }
 
@@ -13,7 +13,7 @@ export function useRoles() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<RolesFeedback | null>(null);
+  const [toast, setToast] = useState<RolesToast | null>(null);
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -31,20 +31,28 @@ export function useRoles() {
     void reload();
   }, [reload]);
 
+  const toastError = useCallback(
+    (err: unknown) => {
+      const fallback = err instanceof ApiError ? err.message : t("admin.roles.actionError");
+      const code = err instanceof ApiError ? err.code : undefined;
+      setToast({ severity: "error", message: apiErrorMessage(t, code, fallback) });
+    },
+    [t]
+  );
+
   const run = useCallback(
     async (action: () => Promise<unknown>, successKey: string): Promise<boolean> => {
       try {
         await action();
-        setFeedback({ severity: "success", message: t(successKey) });
+        setToast({ severity: "success", message: t(successKey) });
         await reload();
         return true;
       } catch (err) {
-        const message = err instanceof ApiError ? err.message : t("admin.roles.actionError");
-        setFeedback({ severity: "error", message });
+        toastError(err);
         return false;
       }
     },
-    [reload, t]
+    [reload, t, toastError]
   );
 
   const create = useCallback(
@@ -57,5 +65,5 @@ export function useRoles() {
     [run]
   );
 
-  return { roles, loading, loadError, feedback, setFeedback, reload, create, remove };
+  return { roles, loading, loadError, toast, setToast, reload, create, remove };
 }
