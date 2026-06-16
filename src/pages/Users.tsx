@@ -240,6 +240,7 @@ export default function Users() {
         loading={loading}
         emptyMessage={t("admin.users.empty")}
         fixedLayout
+        stickyHeader
         actionsWidth="10%"
         rowSx={(u) => (u.status === "disabled" ? { opacity: 0.5 } : {})}
         actions={(user) => (
