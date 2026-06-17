@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ChI18nProvider, ChThemeProvider } from "@custhome/ui";
 import { defaultLocale, messages } from "../i18n/messages";
@@ -69,7 +69,9 @@ describe("Page Utilisateurs", () => {
     renderUsers();
     await screen.findByText("attente@test.fr");
     await user.click(screen.getByRole("button", { name: "Éditer" }));
-    expect(await screen.findByText("En attente")).toBeInTheDocument();
+    await screen.findByText("Modifier l'utilisateur");
+    const panel = document.querySelector(".MuiDrawer-paper") as HTMLElement;
+    expect(within(panel).getByText("En attente")).toBeInTheDocument();
   });
 
   it("active un compte en attente via le toggle", async () => {
