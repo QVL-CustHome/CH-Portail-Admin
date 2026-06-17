@@ -79,3 +79,35 @@ export function updateUserWhitelist(id: string, whitelistOnly: boolean, allowedI
 export function deleteUser(id: string) {
   return request<void>(`/admin/users/${id}`, { method: "DELETE" });
 }
+
+export interface RegistrationSetting {
+  enabled: boolean;
+}
+
+export function getRegistrationSetting() {
+  return request<RegistrationSetting>("/admin/settings/registration");
+}
+
+export function setRegistrationSetting(enabled: boolean) {
+  return request<RegistrationSetting>("/admin/settings/registration", {
+    method: "PUT",
+    body: JSON.stringify({ enabled }),
+  });
+}
+
+export type TrafficPeriod = "day" | "week" | "month" | "year";
+
+export interface PortalTraffic {
+  portal: string;
+  connected_users: number;
+}
+
+export interface TrafficResponse {
+  period: string;
+  registrations: number;
+  portals: PortalTraffic[];
+}
+
+export function getTraffic(period: TrafficPeriod) {
+  return request<TrafficResponse>(`/admin/analytics/traffic?period=${period}`);
+}

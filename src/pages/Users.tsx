@@ -7,6 +7,7 @@ import {
   InputEmail,
   InputPassword,
   InputText,
+  Legend,
   NAME_REGEX,
   PageContent,
   SidePanel,
@@ -87,7 +88,7 @@ export default function Users() {
   ];
 
   return (
-    <PageContent hideUtilitiesOnMobile>
+    <PageContent hideUtilitiesOnMobile fillHeight>
       {loadError && <Feedback severity="error">{loadError}</Feedback>}
 
       <SidePanel
@@ -233,6 +234,15 @@ export default function Users() {
         </div>
       </SidePanel>
 
+      <div style={{ marginBottom: "1rem" }}>
+        <Legend
+          items={[
+            { status: "warning", label: t("admin.status.pending_validation") },
+            { status: "neutral", label: t("admin.status.disabled") },
+          ]}
+        />
+      </div>
+
       <DataTable
         columns={columns}
         rows={users}
@@ -241,8 +251,15 @@ export default function Users() {
         emptyMessage={t("admin.users.empty")}
         fixedLayout
         stickyHeader
+        fillHeight
         actionsWidth="10%"
-        rowSx={(u) => (u.status === "disabled" ? { opacity: 0.5 } : {})}
+        rowSx={(u) =>
+          u.status === "disabled"
+            ? { opacity: 0.5 }
+            : u.status === "pending_validation"
+              ? { "& td": { backgroundColor: "warning.main", color: "warning.contrastText", borderBottom: "none" } }
+              : {}
+        }
         actions={(user) => (
           <div className="admin-actions">
             <IconActionButton icon="pencil" aria-label={t("admin.users.action.edit")} onClick={() => edit.startEdit(user)} />

@@ -23,3 +23,41 @@ body {
   justify-content: flex-end;
   flex-wrap: wrap;
 }
+
+.admin-registration-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.admin-dashboard-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.admin-dashboard-grid > :first-child {
+  flex: 0 0 auto;
+}
+
+.admin-dashboard-grid > :last-child {
+  flex: 1;
+  min-height: 0;
+}
+
+@media (min-width: 769px) {
+  .admin-dashboard-grid {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .admin-dashboard-grid > :first-child,
+  .admin-dashboard-grid > :last-child {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+  }
+}
