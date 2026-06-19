@@ -1,7 +1,7 @@
 import {
-  Checkbox,
   DataTable,
   DeleteButton,
+  Divider,
   Feedback,
   IconActionButton,
   InputEmail,
@@ -11,6 +11,7 @@ import {
   NAME_REGEX,
   PageContent,
   SidePanel,
+  Stack,
   StatusChip,
   Toast,
   Toggle,
@@ -22,6 +23,8 @@ import { PORTALS } from "../api/roles";
 import { statusTone } from "../lib/status";
 import { useUsers } from "../hooks/useUsers";
 import { useUserEditForm } from "../hooks/useUserEditForm";
+import UserRolesEditor from "../components/UserRolesEditor";
+import AllowedIpsList from "../components/AllowedIpsList";
 
 export default function Users() {
   const { t } = useTranslation();
@@ -96,7 +99,7 @@ export default function Users() {
         onClose={handlePanelClose}
         title={t("admin.users.editTitle")}
         footer={
-          <div className="admin-actions" style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
+          <Stack direction="row" justifyContent="end" gap="sm">
             <IconActionButton icon="save" aria-label={t("admin.save")} onClick={edit.submitEdit} disabled={edit.busy} />
             <DeleteButton
               aria-label={t("admin.users.action.delete")}
@@ -107,22 +110,23 @@ export default function Users() {
               disabled={edit.busy}
               onConfirm={handleDeleteUser}
             />
-          </div>
+          </Stack>
         }
       >
         {edit.editing && (
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-            <span style={{ fontWeight: 500 }}>{t("admin.users.col.status")}</span>
+          <Stack direction="row" alignItems="center" gap="sm">
+            <span className="admin-label-medium">{t("admin.users.col.status")}</span>
             <StatusChip
               tone={statusTone[edit.editing.status]}
               label={t(`admin.status.${edit.editing.status}`)}
             />
-          </div>
+          </Stack>
         )}
 
-        <form
+        <Stack
+          as="form"
+          gap="md"
           onSubmit={(e) => { e.preventDefault(); void edit.submitEdit(); }}
-          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
         >
           <InputText
             label={t("admin.users.col.name")}
@@ -144,128 +148,62 @@ export default function Users() {
             onChange={edit.form.setPassword}
             autoComplete="new-password"
           />
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-            {PORTALS.map((portal) => {
-              const subs = edit.catalogue.filter((r) => r.portal === portal && r.kind === "sub");
-              return (
-                <div
-                  key={portal}
-                  style={{
-                    border: "0.0625rem solid var(--ch-palette-divider)",
-                    borderRadius: "0.625rem",
-                    padding: "0.75rem",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}>
-                    <span style={{ fontWeight: 600 }}>{t(`admin.portal.label.${portal}`)}</span>
-                    <Toggle
-                      checked={edit.form.roles.includes(portal)}
-                      onChange={() => toggleRole(portal)}
-                      color="primary"
-                      label={t("admin.users.portalAccess")}
-                    />
-                  </div>
-                  {subs.length > 0 && (
-                    <div style={{ marginTop: "0.6rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                      <span style={{ fontSize: "0.85rem", color: "var(--ch-palette-text-secondary)" }}>
-                        {t("admin.users.subRoles")}
-                      </span>
-                      {subs.map((role) => (
-                        <Checkbox
-                          key={role.id}
-                          checked={edit.form.roles.includes(role.name)}
-                          onChange={() => toggleRole(role.name)}
-                          label={role.name}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </form>
-
-        <hr style={{ border: "none", borderTop: "0.0625rem solid var(--ch-palette-divider)", margin: "1.25rem 0" }} />
-
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}>
-          <span style={{ fontWeight: 500 }}>{t("admin.users.whitelistOnly")}</span>
-          <Toggle
-            checked={edit.whitelistOnly}
-            onChange={edit.setWhitelistOnly}
-            color="primary"
-            label={t("admin.users.whitelistOnly")}
+          <UserRolesEditor
+            catalogue={edit.catalogue}
+            roles={edit.form.roles}
+            onToggleRole={toggleRole}
           />
-        </div>
+        </Stack>
 
-        <div style={{ marginTop: "1rem" }}>
-          <p style={{ fontWeight: 500, margin: "0 0 0.5rem" }}>{t("admin.users.allowedIps")}</p>
-          {edit.allowedIps.length === 0 ? (
-            <p style={{ color: "var(--ch-palette-text-secondary)", margin: 0 }}>
-              {t("admin.users.noIps")}
-            </p>
-          ) : (
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-              {edit.allowedIps.map((ip) => (
-                <li
-                  key={ip}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "0.5rem",
-                    padding: "0.35rem 0.6rem",
-                    borderRadius: "0.5rem",
-                    background: "var(--ch-palette-background-default)",
-                  }}
-                >
-                  <span style={{ fontFamily: "monospace" }}>{ip}</span>
-                  <IconActionButton
-                    icon="close"
-                    variant="secondary"
-                    size={28}
-                    aria-label={`${t("admin.users.removeIp")} ${ip}`}
-                    onClick={() => edit.removeIp(ip)}
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <Divider spacing="lg" />
+
+        <Stack gap="md">
+          <Stack direction="row" alignItems="center" justifyContent="space-between" gap="md">
+            <span className="admin-label-medium">{t("admin.users.whitelistOnly")}</span>
+            <Toggle
+              checked={edit.whitelistOnly}
+              onChange={edit.setWhitelistOnly}
+              color="primary"
+              label={t("admin.users.whitelistOnly")}
+            />
+          </Stack>
+
+          <AllowedIpsList allowedIps={edit.allowedIps} onRemoveIp={edit.removeIp} />
+        </Stack>
       </SidePanel>
 
-      <div style={{ marginBottom: "1rem" }}>
+      <Stack gap="md" fill>
         <Legend
           items={[
             { status: "warning", label: t("admin.status.pending_validation") },
             { status: "neutral", label: t("admin.status.disabled") },
           ]}
         />
-      </div>
 
-      <DataTable
-        columns={columns}
-        rows={users}
-        getRowKey={(u) => u.user_id}
-        loading={loading}
-        emptyMessage={t("admin.users.empty")}
-        fixedLayout
-        stickyHeader
-        fillHeight
-        actionsWidth="10%"
-        rowSx={(u) =>
-          u.status === "disabled"
-            ? { opacity: 0.5 }
-            : u.status === "pending_validation"
-              ? { "& td": { backgroundColor: "warning.main", color: "warning.contrastText", borderBottom: "none" } }
-              : {}
-        }
-        actions={(user) => (
-          <div className="admin-actions">
-            <IconActionButton icon="pencil" aria-label={t("admin.users.action.edit")} onClick={() => edit.startEdit(user)} />
-          </div>
-        )}
-      />
+        <DataTable
+          columns={columns}
+          rows={users}
+          getRowKey={(u) => u.user_id}
+          loading={loading}
+          emptyMessage={t("admin.users.empty")}
+          fixedLayout
+          stickyHeader
+          fillHeight
+          actionsWidth="10%"
+          rowSx={(u) =>
+            u.status === "disabled"
+              ? { opacity: 0.5 }
+              : u.status === "pending_validation"
+                ? { "& td": { backgroundColor: "warning.main", color: "warning.contrastText", borderBottom: "none" } }
+                : {}
+          }
+          actions={(user) => (
+            <div className="admin-actions">
+              <IconActionButton icon="pencil" aria-label={t("admin.users.action.edit")} onClick={() => edit.startEdit(user)} />
+            </div>
+          )}
+        />
+      </Stack>
 
       <Toast
         open={toast !== null}

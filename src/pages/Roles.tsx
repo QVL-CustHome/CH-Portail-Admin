@@ -2,11 +2,13 @@ import {
   AddButton,
   BulletList,
   Card,
+  CardGrid,
   ConfirmDialog,
   Feedback,
   IconActionButton,
   InputText,
   PageContent,
+  Stack,
   Toast,
   useTranslation,
   type ChBulletListItem,
@@ -52,13 +54,7 @@ export default function Roles() {
     <PageContent hideUtilitiesOnMobile>
       {loadError && <Feedback severity="error">{loadError}</Feedback>}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(17.5rem, 1fr))",
-          gap: "1rem",
-        }}
-      >
+      <CardGrid minItemWidth="17.5rem" gap="md">
         {PORTALS.map((portal) => {
           const subs = subRolesFor(portal);
           const isAdding = addingPortal === portal;
@@ -87,7 +83,7 @@ export default function Roles() {
                 />
               ),
               action: (
-                <div style={{ display: "flex", gap: "0.25rem" }}>
+                <Stack direction="row" gap="xs">
                   <IconActionButton
                     icon="save"
                     aria-label={t("admin.save")}
@@ -100,7 +96,7 @@ export default function Roles() {
                     aria-label={t("admin.cancel")}
                     onClick={cancelAdd}
                   />
-                </div>
+                </Stack>
               ),
             });
           }
@@ -111,25 +107,23 @@ export default function Roles() {
               title={t(`admin.portal.label.${portal}`)}
               subtitle={t("admin.roles.portalRole", { role: portal })}
             >
-              {loading ? null : items.length === 0 ? (
-                <p style={{ color: "var(--ch-palette-text-secondary)", margin: "0 0 0.75rem" }}>
-                  {t("admin.roles.noSubRoles")}
-                </p>
-              ) : (
-                <div style={{ marginBottom: "0.75rem" }}>
+              <Stack gap="sm">
+                {loading ? null : items.length === 0 ? (
+                  <span className="admin-text-muted">{t("admin.roles.noSubRoles")}</span>
+                ) : (
                   <BulletList items={items} />
-                </div>
-              )}
-              {!isAdding && (
-                <AddButton
-                  aria-label={t("admin.roles.addSubRole")}
-                  onClick={() => startAdd(portal)}
-                />
-              )}
+                )}
+                {!isAdding && (
+                  <AddButton
+                    aria-label={t("admin.roles.addSubRole")}
+                    onClick={() => startAdd(portal)}
+                  />
+                )}
+              </Stack>
             </Card>
           );
         })}
-      </div>
+      </CardGrid>
 
       <ConfirmDialog
         open={del.target !== null}
