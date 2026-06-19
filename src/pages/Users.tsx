@@ -151,8 +151,8 @@ export default function Users() {
                 <div
                   key={portal}
                   style={{
-                    border: "1px solid var(--ch-palette-divider, #e6e3dc)",
-                    borderRadius: 10,
+                    border: "0.0625rem solid var(--ch-palette-divider)",
+                    borderRadius: "0.625rem",
                     padding: "0.75rem",
                   }}
                 >
@@ -167,7 +167,7 @@ export default function Users() {
                   </div>
                   {subs.length > 0 && (
                     <div style={{ marginTop: "0.6rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                      <span style={{ fontSize: "0.85rem", color: "var(--ch-palette-text-secondary, #5a564e)" }}>
+                      <span style={{ fontSize: "0.85rem", color: "var(--ch-palette-text-secondary)" }}>
                         {t("admin.users.subRoles")}
                       </span>
                       {subs.map((role) => (
@@ -186,7 +186,7 @@ export default function Users() {
           </div>
         </form>
 
-        <hr style={{ border: "none", borderTop: "1px solid var(--ch-palette-divider, #e6e3dc)", margin: "1.25rem 0" }} />
+        <hr style={{ border: "none", borderTop: "0.0625rem solid var(--ch-palette-divider)", margin: "1.25rem 0" }} />
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}>
           <span style={{ fontWeight: 500 }}>{t("admin.users.whitelistOnly")}</span>
@@ -201,7 +201,7 @@ export default function Users() {
         <div style={{ marginTop: "1rem" }}>
           <p style={{ fontWeight: 500, margin: "0 0 0.5rem" }}>{t("admin.users.allowedIps")}</p>
           {edit.allowedIps.length === 0 ? (
-            <p style={{ color: "var(--ch-palette-text-secondary, #5a564e)", margin: 0 }}>
+            <p style={{ color: "var(--ch-palette-text-secondary)", margin: 0 }}>
               {t("admin.users.noIps")}
             </p>
           ) : (
@@ -215,8 +215,8 @@ export default function Users() {
                     justifyContent: "space-between",
                     gap: "0.5rem",
                     padding: "0.35rem 0.6rem",
-                    borderRadius: 8,
-                    background: "var(--ch-palette-background-default, #fbfaf9)",
+                    borderRadius: "0.5rem",
+                    background: "var(--ch-palette-background-default)",
                   }}
                 >
                   <span style={{ fontFamily: "monospace" }}>{ip}</span>

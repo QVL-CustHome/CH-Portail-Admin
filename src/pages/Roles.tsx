@@ -55,7 +55,7 @@ export default function Roles() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(17.5rem, 1fr))",
           gap: "1rem",
         }}
       >
