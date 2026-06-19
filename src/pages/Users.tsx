@@ -189,6 +189,8 @@ export default function Users() {
           fixedLayout
           stickyHeader
           fillHeight
+          animateRows
+          enableKeyboardNav
           actionsWidth="10%"
           rowSx={(u) =>
             u.status === "disabled"
