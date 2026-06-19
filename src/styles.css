@@ -61,3 +61,39 @@ body {
     min-height: 0;
   }
 }
+
+.admin-label-strong {
+  font-weight: 600;
+}
+
+.admin-label-medium {
+  font-weight: 500;
+}
+
+.admin-text-secondary {
+  color: var(--ch-palette-text-secondary);
+  font-size: 0.85rem;
+}
+
+.admin-text-muted {
+  color: var(--ch-palette-text-secondary);
+}
+
+.admin-text-metric {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.admin-roles-portal-card {
+  border: 0.0625rem solid var(--ch-palette-divider);
+  border-radius: 0.625rem;
+}
+
+.admin-ip-row {
+  border-radius: 0.5rem;
+  background: var(--ch-palette-background-default);
+}
+
+.admin-ip-value {
+  font-family: monospace;
+}
