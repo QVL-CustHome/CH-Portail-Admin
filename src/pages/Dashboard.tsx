@@ -67,6 +67,8 @@ export default function Dashboard() {
             emptyMessage={t("admin.dashboard.pendingEmpty")}
             stickyHeader
             fillHeight
+            animateRows
+            enableKeyboardNav
             actionsHeader={t("admin.users.col.actions")}
             actions={(user) => (
               <div className="admin-actions">
