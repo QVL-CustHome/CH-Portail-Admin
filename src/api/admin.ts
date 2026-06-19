@@ -37,10 +37,6 @@ export function listUsers(params: ListUsersParams = {}) {
   return request<UserListResponse>(`/admin/users${suffix}`);
 }
 
-export function listPendingUsers() {
-  return request<UserListResponse>("/admin/users/pending");
-}
-
 export function updateUserStatus(id: string, status: AccountStatus) {
   return request<AdminUser>(`/admin/users/${id}/status`, {
     method: "PUT",

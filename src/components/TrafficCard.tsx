@@ -13,7 +13,7 @@ export default function TrafficCard() {
   return (
     <Card title={t("admin.dashboard.trafficTitle")}>
       <Stack gap="md">
-        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+        <Stack direction="row" gap="sm" wrap>
           {PERIODS.map((p) => (
             <Button
               key={p}
@@ -24,7 +24,7 @@ export default function TrafficCard() {
               {t(`admin.dashboard.period.${p}`)}
             </Button>
           ))}
-        </div>
+        </Stack>
 
         {loading ? (
           <Spinner />
@@ -32,34 +32,26 @@ export default function TrafficCard() {
           <Feedback severity="error">{t("admin.dashboard.trafficError")}</Feedback>
         ) : (
           <Stack gap="sm">
-            <div
-              style={{
-                display: "flex",
-                alignItems: "baseline",
-                justifyContent: "space-between",
-                gap: "1rem",
-              }}
-            >
-              <span style={{ color: "var(--ch-palette-text-secondary)" }}>
-                {t("admin.dashboard.registrationsLabel")}
-              </span>
-              <strong style={{ fontSize: "1.25rem" }}>{data.registrations}</strong>
-            </div>
+            <Stack direction="row" alignItems="baseline" justifyContent="space-between" gap="md">
+              <span className="admin-text-muted">{t("admin.dashboard.registrationsLabel")}</span>
+              <strong className="admin-text-metric">{data.registrations}</strong>
+            </Stack>
 
-            <p style={{ margin: "0.5rem 0 0", fontWeight: 600 }}>
-              {t("admin.dashboard.connectedLabel")}
-            </p>
-            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+            <span className="admin-label-strong">{t("admin.dashboard.connectedLabel")}</span>
+            <Stack gap="xs">
               {data.portals.map((p) => (
-                <li
+                <Stack
                   key={p.portal}
-                  style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: "1rem" }}
+                  direction="row"
+                  alignItems="baseline"
+                  justifyContent="space-between"
+                  gap="md"
                 >
                   <span>{t(`admin.portal.label.${p.portal}`)}</span>
                   <strong>{p.connected_users}</strong>
-                </li>
+                </Stack>
               ))}
-            </ul>
+            </Stack>
           </Stack>
         )}
       </Stack>
