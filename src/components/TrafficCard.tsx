@@ -40,7 +40,7 @@ export default function TrafficCard() {
                 gap: "1rem",
               }}
             >
-              <span style={{ color: "var(--ch-palette-text-secondary, #5a564e)" }}>
+              <span style={{ color: "var(--ch-palette-text-secondary)" }}>
                 {t("admin.dashboard.registrationsLabel")}
               </span>
               <strong style={{ fontSize: "1.25rem" }}>{data.registrations}</strong>
