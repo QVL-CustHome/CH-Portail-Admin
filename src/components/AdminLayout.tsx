@@ -27,6 +27,7 @@ export default function AdminLayout() {
 
   return (
     <PageScaffold
+      navbarTitle="CustHome"
       title={t("admin.brand")}
       items={items}
       activeHref={location.pathname}
