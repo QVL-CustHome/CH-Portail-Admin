@@ -4,7 +4,7 @@ export const defaultLocale: ChLocale = "fr";
 
 export const messages: ChLocaleMessages = {
   fr: {
-    "admin.brand": "CustHome - Portail Admin",
+    "admin.brand": "Portail Admin",
     "admin.loading": "Chargement",
     "admin.logout": "Se déconnecter",
     "admin.nav.label": "Navigation principale",
@@ -121,7 +121,7 @@ export const messages: ChLocaleMessages = {
     "admin.users.unsavedChanges": "Modifications non enregistrées",
   },
   en: {
-    "admin.brand": "CustHome - Admin Portal",
+    "admin.brand": "Admin Portal",
     "admin.loading": "Loading",
     "admin.logout": "Sign out",
     "admin.nav.label": "Main navigation",
