@@ -4,6 +4,7 @@ import { useCurrentUser } from "../context/current-user";
 import { logout } from "../api/auth";
 import { navigateTo } from "../lib/navigation";
 import { loginUrl } from "../lib/auth-redirect";
+import LegalLinks from "./LegalLinks";
 
 export default function AdminLayout() {
   const { t } = useTranslation();
@@ -34,6 +35,8 @@ export default function AdminLayout() {
       onNavigate={(href) => navigate(href)}
       userName={me.name}
       onLogout={handleLogout}
+      footer={<LegalLinks />}
+      mobileFooterPlacement="settings"
     >
       <Outlet />
     </PageScaffold>
