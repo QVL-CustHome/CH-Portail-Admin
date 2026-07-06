@@ -3,7 +3,7 @@ import { PageScaffold, useTranslation, type ChNavbarItem } from "@custhome/ui";
 import { useCurrentUser } from "../context/current-user";
 import { logout } from "../api/auth";
 import { navigateTo } from "../lib/navigation";
-import { loginUrl } from "../lib/auth-redirect";
+import { cguUrl, loginUrl } from "../lib/auth-redirect";
 import LegalLinks from "./LegalLinks";
 
 export default function AdminLayout() {
@@ -36,6 +36,7 @@ export default function AdminLayout() {
       userName={me.name}
       onLogout={handleLogout}
       footer={<LegalLinks />}
+      infoHref={cguUrl()}
       mobileFooterPlacement="settings"
     >
       <Outlet />
