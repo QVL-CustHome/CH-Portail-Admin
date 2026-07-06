@@ -90,13 +90,18 @@ describe("Admin - footer legal (SCRUM-299)", () => {
       expect(screen.queryByRole("link", { name: NOTICE_LABEL })).not.toBeInTheDocument();
     });
 
-    it("expose les deux liens dans le menu reglages une fois ouvert", async () => {
+    it("expose un unique bouton info-lien legal dans le menu reglages, sans liens directs", async () => {
       renderLayout();
 
       const menu = await openSettingsMenu();
 
-      expect(within(menu).getByRole("link", { name: CGU_LABEL })).toBeVisible();
-      expect(within(menu).getByRole("link", { name: NOTICE_LABEL })).toBeVisible();
+      expect(within(menu).queryByRole("link", { name: CGU_LABEL })).not.toBeInTheDocument();
+      expect(within(menu).queryByRole("link", { name: NOTICE_LABEL })).not.toBeInTheDocument();
+
+      const info = within(menu).getByRole("link", { name: /informations l[ée]gales/i });
+      const href = info.getAttribute("href") ?? "";
+      expect(href).toMatch(/^https?:\/\//);
+      expect(href.endsWith("/cgu")).toBe(true);
     });
   });
 
