@@ -120,6 +120,9 @@ export const messages: ChLocaleMessages = {
     "admin.users.subRoles": "Sous-rôles",
     "admin.users.noPortalRoles": "Aucun accès portail",
     "admin.users.unsavedChanges": "Modifications non enregistrées",
+    "admin.legal.footerLabel": "Liens légaux",
+    "admin.legal.cgu": "Conditions générales d'utilisation",
+    "admin.legal.notice": "Mentions légales",
   },
   en: {
     "admin.brand": "Admin Portal",
@@ -238,5 +241,8 @@ export const messages: ChLocaleMessages = {
     "admin.users.subRoles": "Sub-roles",
     "admin.users.noPortalRoles": "No portal access",
     "admin.users.unsavedChanges": "Unsaved changes",
+    "admin.legal.footerLabel": "Legal links",
+    "admin.legal.cgu": "Terms of use",
+    "admin.legal.notice": "Legal notice",
   },
 };
