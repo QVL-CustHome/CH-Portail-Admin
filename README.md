@@ -3,7 +3,7 @@
 Portail d'administration CustHome : gestion des utilisateurs (activation/désactivation,
 édition, suppression), workflow de validation des nouveaux comptes, et gestion des rôles.
 
-Front **React 19 + TypeScript + Vite**, basé sur le design system **`@custhome/ui`**,
+Front **React 19 + TypeScript + Vite**, basé sur le design system **`canopui`**,
 servi par un serveur Node/Express qui proxifie `/api/*` vers l'**API Gateway**.
 
 ## Architecture
@@ -35,8 +35,9 @@ cp .env.example .env   # ajuster si besoin (PORT, GATEWAY_URL, VITE_AUTH_PORTAL_
 npm run dev            # http://localhost:3001
 ```
 
-Le portail attend l'API Gateway sur `http://localhost:8080`. En dev, `npm run dev`
-synchronise au préalable le `dist/` local de `CH-UI-Library` s'il est présent.
+Le portail attend l'API Gateway sur `http://localhost:8080`. Le design system `canopui`
+est un package hébergé (registry npm privé configuré dans `.npmrc`) : `npm install` le récupère,
+aucune synchronisation locale n'est nécessaire.
 
 ## Scripts
 
