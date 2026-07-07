@@ -1,4 +1,4 @@
-import type { ChStatusTone } from "@custhome/ui";
+import type { ChStatusTone } from "canopui";
 import type { AccountStatus } from "../api/admin";
 
 export const statusTone: Record<AccountStatus, ChStatusTone> = {

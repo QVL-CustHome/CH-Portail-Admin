@@ -1,4 +1,4 @@
-import { IconActionButton, Stack, useTranslation } from "@custhome/ui";
+import { IconActionButton, Stack, useTranslation } from "canopui";
 
 interface AllowedIpsListProps {
   allowedIps: string[];

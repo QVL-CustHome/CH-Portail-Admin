@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import { ChI18nProvider, ChThemeProvider } from "@custhome/ui";
+import { ChI18nProvider, ChThemeProvider } from "canopui";
 import { defaultLocale, messages } from "../i18n/messages";
 import { CurrentUserProvider } from "../context/CurrentUser";
 import type { Me } from "../api/auth";

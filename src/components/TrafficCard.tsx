@@ -1,4 +1,4 @@
-import { Button, Card, Feedback, Spinner, Stack, useTranslation } from "@custhome/ui";
+import { Button, Card, Feedback, Spinner, Stack, useTranslation } from "canopui";
 import { useState } from "react";
 import type { TrafficPeriod } from "../api/admin";
 import { useTraffic } from "../hooks/useTraffic";

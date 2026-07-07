@@ -17,7 +17,7 @@ import {
   Toggle,
   useTranslation,
   type ChColumn,
-} from "@custhome/ui";
+} from "canopui";
 import type { AdminUser } from "../api/admin";
 import { PORTALS } from "../api/roles";
 import { statusTone } from "../lib/status";
