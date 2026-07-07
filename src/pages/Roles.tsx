@@ -12,7 +12,7 @@ import {
   Toast,
   useTranslation,
   type ChBulletListItem,
-} from "@custhome/ui";
+} from "canopui";
 import { useState } from "react";
 import { PORTALS, type Portal, type Role } from "../api/roles";
 import { useRoles } from "../hooks/useRoles";

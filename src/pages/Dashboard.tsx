@@ -9,7 +9,7 @@ import {
   Toggle,
   useTranslation,
   type ChColumn,
-} from "@custhome/ui";
+} from "canopui";
 import { useUsers } from "../hooks/useUsers";
 import { useRegistrationSetting } from "../hooks/useRegistrationSetting";
 import TrafficCard from "../components/TrafficCard";

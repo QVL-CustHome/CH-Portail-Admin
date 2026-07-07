@@ -1,4 +1,4 @@
-import { Checkbox, Stack, Toggle, useTranslation } from "@custhome/ui";
+import { Checkbox, Stack, Toggle, useTranslation } from "canopui";
 import { PORTALS, type Role } from "../api/roles";
 
 interface UserRolesEditorProps {

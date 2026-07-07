@@ -1,4 +1,4 @@
-import { buildCguUrl, buildLoginUrl } from "@custhome/ui";
+import { buildCguUrl, buildLoginUrl } from "canopui";
 
 const AUTH_PORTAL_URL =
   import.meta.env.VITE_AUTH_PORTAL_URL ?? "http://localhost:3200";
