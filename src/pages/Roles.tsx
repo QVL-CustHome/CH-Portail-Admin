@@ -13,6 +13,7 @@ import {
   useTranslation,
   type ChBulletListItem,
 } from "canopui";
+import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { PORTALS, type Portal, type Role } from "../api/roles";
 import { useRoles } from "../hooks/useRoles";
@@ -51,7 +52,7 @@ export default function Roles() {
   };
 
   return (
-    <PageContent hideUtilitiesOnMobile>
+    <PageContent>
       {loadError && <Feedback severity="error">{loadError}</Feedback>}
 
       <CardGrid minItemWidth="17.5rem" gap="md">
@@ -109,7 +110,9 @@ export default function Roles() {
             >
               <Stack gap="sm">
                 {loading ? null : items.length === 0 ? (
-                  <span className="admin-text-muted">{t("admin.roles.noSubRoles")}</span>
+                  <Typography component="span" color="text.secondary">
+                    {t("admin.roles.noSubRoles")}
+                  </Typography>
                 ) : (
                   <BulletList items={items} />
                 )}

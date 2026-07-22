@@ -1,4 +1,6 @@
 import { Checkbox, Stack, Toggle, useTranslation } from "canopui";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { PORTALS, type Role } from "../api/roles";
 
 interface UserRolesEditorProps {
@@ -15,10 +17,18 @@ export default function UserRolesEditor({ catalogue, roles, onToggleRole }: User
       {PORTALS.map((portal) => {
         const subs = catalogue.filter((role) => role.portal === portal && role.kind === "sub");
         return (
-          <div key={portal} className="admin-roles-portal-card">
+          <Box
+            key={portal}
+            sx={{
+              border: "0.0625rem solid var(--ch-palette-divider)",
+              borderRadius: "var(--ch-radius-md)",
+            }}
+          >
             <Stack gap="sm" padding="sm">
               <Stack direction="row" alignItems="center" justifyContent="space-between" gap="md">
-                <span className="admin-label-strong">{t(`admin.portal.label.${portal}`)}</span>
+                <Typography component="span" color="text.primary" fontWeight={600}>
+                  {t(`admin.portal.label.${portal}`)}
+                </Typography>
                 <Toggle
                   checked={roles.includes(portal)}
                   onChange={() => onToggleRole(portal)}
@@ -28,7 +38,9 @@ export default function UserRolesEditor({ catalogue, roles, onToggleRole }: User
               </Stack>
               {subs.length > 0 && (
                 <Stack gap="xs">
-                  <span className="admin-text-secondary">{t("admin.users.subRoles")}</span>
+                  <Typography variant="body2" component="span" color="text.secondary">
+                    {t("admin.users.subRoles")}
+                  </Typography>
                   {subs.map((role) => (
                     <Checkbox
                       key={role.id}
@@ -40,7 +52,7 @@ export default function UserRolesEditor({ catalogue, roles, onToggleRole }: User
                 </Stack>
               )}
             </Stack>
-          </div>
+          </Box>
         );
       })}
     </Stack>

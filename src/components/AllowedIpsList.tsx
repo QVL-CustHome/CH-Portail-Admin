@@ -1,4 +1,6 @@
 import { IconActionButton, Stack, useTranslation } from "canopui";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 interface AllowedIpsListProps {
   allowedIps: string[];
@@ -10,13 +12,23 @@ export default function AllowedIpsList({ allowedIps, onRemoveIp }: AllowedIpsLis
 
   return (
     <Stack gap="sm">
-      <span className="admin-label-medium">{t("admin.users.allowedIps")}</span>
+      <Typography component="span" color="text.primary" fontWeight={500}>
+        {t("admin.users.allowedIps")}
+      </Typography>
       {allowedIps.length === 0 ? (
-        <span className="admin-text-muted">{t("admin.users.noIps")}</span>
+        <Typography component="span" color="text.secondary">
+          {t("admin.users.noIps")}
+        </Typography>
       ) : (
         <Stack gap="xs">
           {allowedIps.map((ip) => (
-            <div key={ip} className="admin-ip-row">
+            <Box
+              key={ip}
+              sx={{
+                borderRadius: "var(--ch-radius-sm)",
+                backgroundColor: "var(--ch-palette-surface-sunken)",
+              }}
+            >
               <Stack
                 direction="row"
                 alignItems="center"
@@ -24,7 +36,9 @@ export default function AllowedIpsList({ allowedIps, onRemoveIp }: AllowedIpsLis
                 gap="sm"
                 padding="xs"
               >
-                <span className="admin-ip-value">{ip}</span>
+                <Typography component="span" color="text.primary" fontFamily="monospace">
+                  {ip}
+                </Typography>
                 <IconActionButton
                   icon="close"
                   variant="secondary"
@@ -33,7 +47,7 @@ export default function AllowedIpsList({ allowedIps, onRemoveIp }: AllowedIpsLis
                   onClick={() => onRemoveIp(ip)}
                 />
               </Stack>
-            </div>
+            </Box>
           ))}
         </Stack>
       )}

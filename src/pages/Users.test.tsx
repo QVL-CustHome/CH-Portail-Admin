@@ -70,7 +70,7 @@ describe("Page Utilisateurs", () => {
     await screen.findByText("attente@test.fr");
     await user.click(screen.getByRole("button", { name: "Éditer" }));
     await screen.findByText("Modifier l'utilisateur");
-    const panel = document.querySelector(".MuiDrawer-paper") as HTMLElement;
+    const panel = screen.getByRole("dialog");
     expect(within(panel).getByText("En attente")).toBeInTheDocument();
   });
 
