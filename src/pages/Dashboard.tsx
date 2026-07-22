@@ -1,19 +1,10 @@
-import {
-  ApproveButton,
-  Card,
-  DataTable,
-  DeleteButton,
-  Feedback,
-  PageContent,
-  Toast,
-  Toggle,
-  useTranslation,
-  type ChColumn,
-} from "canopui";
+import { CardGrid, Feedback, PageContent, Toast, useTranslation } from "canopui";
 import { useUsers } from "../hooks/useUsers";
 import { useRegistrationSetting } from "../hooks/useRegistrationSetting";
+import DashboardStats from "../components/DashboardStats";
+import RegistrationToggleCard from "../components/RegistrationToggleCard";
 import TrafficCard from "../components/TrafficCard";
-import type { AdminUser } from "../api/admin";
+import PendingUsersCard from "../components/PendingUsersCard";
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -21,10 +12,6 @@ export default function Dashboard() {
   const registration = useRegistrationSetting();
 
   const pendingUsers = users.filter((u) => u.status === "pending_validation");
-
-  const columns: ChColumn<AdminUser>[] = [
-    { key: "name", header: t("admin.users.col.name"), sortable: true },
-  ];
 
   const handleRegistrationToggle = async (on: boolean) => {
     const ok = await registration.toggle(on);
@@ -41,54 +28,26 @@ export default function Dashboard() {
   };
 
   return (
-    <PageContent hideUtilitiesOnMobile fillHeight>
-      <div className="admin-registration-toggle">
-        <Toggle
-          checked={registration.enabled}
-          onChange={handleRegistrationToggle}
-          disabled={registration.loading || registration.saving}
-          color="primary"
-          label={t("admin.dashboard.registrationToggle")}
-        />
-        <span>{t("admin.dashboard.registrationToggle")}</span>
-      </div>
-
+    <PageContent>
       {loadError && <Feedback severity="error">{loadError}</Feedback>}
 
-      <div className="admin-dashboard-grid">
-        <TrafficCard />
+      <DashboardStats users={users} />
 
-        <Card title={t("admin.dashboard.pendingTitle")} fill>
-          <DataTable
-            columns={columns}
-            rows={pendingUsers}
-            getRowKey={(u) => u.user_id}
-            loading={loading}
-            emptyMessage={t("admin.dashboard.pendingEmpty")}
-            stickyHeader
-            fillHeight
-            animateRows
-            enableKeyboardNav
-            actionsHeader={t("admin.users.col.actions")}
-            actions={(user) => (
-              <div className="admin-actions">
-                <ApproveButton
-                  aria-label={`${t("admin.dashboard.action.approve")} ${user.name}`}
-                  onClick={() => void setStatus(user, "active")}
-                />
-                <DeleteButton
-                  aria-label={`${t("admin.users.action.delete")} ${user.name}`}
-                  confirmTitle={t("admin.dashboard.cancelTitle")}
-                  confirmMessage={t("admin.users.deleteMessage")}
-                  confirmLabel={t("admin.confirm")}
-                  cancelLabel={t("admin.cancel")}
-                  onConfirm={() => void remove(user.user_id)}
-                />
-              </div>
-            )}
-          />
-        </Card>
-      </div>
+      <RegistrationToggleCard
+        enabled={registration.enabled}
+        disabled={registration.loading || registration.saving}
+        onChange={handleRegistrationToggle}
+      />
+
+      <CardGrid minItemWidth="26rem" gap="md">
+        <TrafficCard />
+        <PendingUsersCard
+          users={pendingUsers}
+          loading={loading}
+          onApprove={(user) => void setStatus(user, "active")}
+          onDelete={(userId) => void remove(userId)}
+        />
+      </CardGrid>
 
       <Toast
         open={toast !== null}

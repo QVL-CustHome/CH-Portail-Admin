@@ -1,4 +1,13 @@
-import { Button, Card, Feedback, Spinner, Stack, useTranslation } from "canopui";
+import {
+  Card,
+  Feedback,
+  SegmentedControl,
+  Spinner,
+  Stack,
+  useTranslation,
+  type ChSegmentedControlOption,
+} from "canopui";
+import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import type { TrafficPeriod } from "../api/admin";
 import { useTraffic } from "../hooks/useTraffic";
@@ -10,21 +19,22 @@ export default function TrafficCard() {
   const [period, setPeriod] = useState<TrafficPeriod>("week");
   const { data, loading, error } = useTraffic(period);
 
+  const periodOptions: ChSegmentedControlOption<TrafficPeriod>[] = PERIODS.map((p) => ({
+    value: p,
+    label: t(`admin.dashboard.period.${p}`),
+  }));
+
   return (
     <Card title={t("admin.dashboard.trafficTitle")}>
       <Stack gap="md">
-        <Stack direction="row" gap="sm" wrap>
-          {PERIODS.map((p) => (
-            <Button
-              key={p}
-              size="small"
-              variant={p === period ? "primary" : "secondary"}
-              onClick={() => setPeriod(p)}
-            >
-              {t(`admin.dashboard.period.${p}`)}
-            </Button>
-          ))}
-        </Stack>
+        <SegmentedControl
+          options={periodOptions}
+          value={period}
+          onChange={setPeriod}
+          ariaLabel={t("admin.dashboard.trafficTitle")}
+          size="small"
+          fullWidth
+        />
 
         {loading ? (
           <Spinner />
@@ -33,11 +43,17 @@ export default function TrafficCard() {
         ) : (
           <Stack gap="sm">
             <Stack direction="row" alignItems="baseline" justifyContent="space-between" gap="md">
-              <span className="admin-text-muted">{t("admin.dashboard.registrationsLabel")}</span>
-              <strong className="admin-text-metric">{data.registrations}</strong>
+              <Typography component="span" color="text.secondary">
+                {t("admin.dashboard.registrationsLabel")}
+              </Typography>
+              <Typography component="span" color="text.primary" fontWeight={700} fontSize="1.25rem">
+                {data.registrations}
+              </Typography>
             </Stack>
 
-            <span className="admin-label-strong">{t("admin.dashboard.connectedLabel")}</span>
+            <Typography component="span" color="text.primary" fontWeight={600}>
+              {t("admin.dashboard.connectedLabel")}
+            </Typography>
             <Stack gap="xs">
               {data.portals.map((p) => (
                 <Stack
@@ -47,8 +63,12 @@ export default function TrafficCard() {
                   justifyContent="space-between"
                   gap="md"
                 >
-                  <span>{t(`admin.portal.label.${p.portal}`)}</span>
-                  <strong>{p.connected_users}</strong>
+                  <Typography component="span" color="text.primary">
+                    {t(`admin.portal.label.${p.portal}`)}
+                  </Typography>
+                  <Typography component="span" color="text.primary" fontWeight={600}>
+                    {p.connected_users}
+                  </Typography>
                 </Stack>
               ))}
             </Stack>

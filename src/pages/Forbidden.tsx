@@ -1,4 +1,4 @@
-import { Button, Feedback, Heading, Stack, useTranslation } from "canopui";
+import { Button, Feedback, Heading, Layout, Stack, useTranslation } from "canopui";
 import { navigateTo } from "../lib/navigation";
 import { loginUrl } from "../lib/auth-redirect";
 
@@ -6,7 +6,7 @@ export default function Forbidden() {
   const { t } = useTranslation();
 
   return (
-    <div className="admin-centered">
+    <Layout>
       <Stack gap="lg">
         <Heading level={1} size={3}>
           {t("admin.forbidden.title")}
@@ -16,6 +16,6 @@ export default function Forbidden() {
           {t("admin.forbidden.switch")}
         </Button>
       </Stack>
-    </div>
+    </Layout>
   );
 }

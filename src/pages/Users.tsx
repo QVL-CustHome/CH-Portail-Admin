@@ -18,6 +18,7 @@ import {
   useTranslation,
   type ChColumn,
 } from "canopui";
+import Typography from "@mui/material/Typography";
 import type { AdminUser } from "../api/admin";
 import { PORTALS } from "../api/roles";
 import { statusTone } from "../lib/status";
@@ -91,7 +92,7 @@ export default function Users() {
   ];
 
   return (
-    <PageContent hideUtilitiesOnMobile fillHeight>
+    <PageContent fillHeight>
       {loadError && <Feedback severity="error">{loadError}</Feedback>}
 
       <SidePanel
@@ -115,7 +116,9 @@ export default function Users() {
       >
         {edit.editing && (
           <Stack direction="row" alignItems="center" gap="sm">
-            <span className="admin-label-medium">{t("admin.users.col.status")}</span>
+            <Typography component="span" color="text.primary" fontWeight={500}>
+              {t("admin.users.col.status")}
+            </Typography>
             <StatusChip
               tone={statusTone[edit.editing.status]}
               label={t(`admin.status.${edit.editing.status}`)}
@@ -159,7 +162,9 @@ export default function Users() {
 
         <Stack gap="md">
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap="md">
-            <span className="admin-label-medium">{t("admin.users.whitelistOnly")}</span>
+            <Typography component="span" color="text.primary" fontWeight={500}>
+              {t("admin.users.whitelistOnly")}
+            </Typography>
             <Toggle
               checked={edit.whitelistOnly}
               onChange={edit.setWhitelistOnly}
@@ -200,9 +205,13 @@ export default function Users() {
                 : {}
           }
           actions={(user) => (
-            <div className="admin-actions">
-              <IconActionButton icon="pencil" aria-label={t("admin.users.action.edit")} onClick={() => edit.startEdit(user)} />
-            </div>
+            <Stack direction="row" gap="xs" justifyContent="end" wrap>
+              <IconActionButton
+                icon="pencil"
+                aria-label={t("admin.users.action.edit")}
+                onClick={() => edit.startEdit(user)}
+              />
+            </Stack>
           )}
         />
       </Stack>
