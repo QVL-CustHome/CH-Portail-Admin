@@ -28,7 +28,7 @@ function user(overrides: Partial<AdminUser>): AdminUser {
     roles: [],
     status: "active",
     whitelist_only: false,
-    allowed_ips: [],
+    devices: [],
     created_at: "2026-01-01T00:00:00Z",
     ...overrides,
   };

@@ -2,6 +2,16 @@ import { request } from "./client";
 
 export type AccountStatus = "active" | "pending_validation" | "disabled";
 
+/** Un appareil reconnu pour ce compte. L'adresse n'est qu'un repère : c'est le
+ *  cookie posé sur l'appareil qui l'identifie, pas son réseau. */
+export interface UserDevice {
+  id: string;
+  label: string;
+  first_seen: string;
+  last_seen: string;
+  last_ip: string | null;
+}
+
 export interface AdminUser {
   user_id: string;
   name: string;
@@ -9,7 +19,7 @@ export interface AdminUser {
   roles: string[];
   status: AccountStatus;
   whitelist_only: boolean;
-  allowed_ips: string[];
+  devices: UserDevice[];
   created_at: string;
 }
 
@@ -65,10 +75,16 @@ export function updateUserPassword(id: string, password: string) {
   });
 }
 
-export function updateUserWhitelist(id: string, whitelistOnly: boolean, allowedIps: string[]) {
+export function updateUserWhitelist(id: string, whitelistOnly: boolean) {
   return request<AdminUser>(`/admin/users/${id}/whitelist`, {
     method: "PUT",
-    body: JSON.stringify({ whitelist_only: whitelistOnly, allowed_ips: allowedIps }),
+    body: JSON.stringify({ whitelist_only: whitelistOnly }),
+  });
+}
+
+export function revokeUserDevice(id: string, deviceId: string) {
+  return request<AdminUser>(`/admin/users/${id}/devices/${deviceId}`, {
+    method: "DELETE",
   });
 }
 

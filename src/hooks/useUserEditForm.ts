@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
-import type { AdminUser } from "../api/admin";
+import type { AdminUser, UserDevice } from "../api/admin";
 import { listRoles, type Role } from "../api/roles";
 
 interface UserEditActions {
   editUser: (id: string, name: string, email: string) => Promise<boolean>;
   assignRoles: (id: string, roles: string[]) => Promise<boolean>;
   changePassword: (id: string, password: string) => Promise<boolean>;
-  updateWhitelist: (id: string, whitelistOnly: boolean, allowedIps: string[]) => Promise<boolean>;
+  updateWhitelist: (id: string, whitelistOnly: boolean) => Promise<boolean>;
+  revokeDevice: (id: string, deviceId: string) => Promise<boolean>;
   onUpdated?: (name: string) => void;
 }
 
@@ -17,7 +18,7 @@ export function useUserEditForm(actions: UserEditActions) {
   const [password, setPassword] = useState("");
   const [roles, setRoles] = useState<string[]>([]);
   const [whitelistOnly, setWhitelistOnlyState] = useState(false);
-  const [allowedIps, setAllowedIps] = useState<string[]>([]);
+  const [devices, setDevices] = useState<UserDevice[]>([]);
   const [busy, setBusy] = useState(false);
   const [catalogue, setCatalogue] = useState<Role[]>([]);
 
@@ -36,7 +37,7 @@ export function useUserEditForm(actions: UserEditActions) {
     setPassword("");
     setRoles([...user.roles]);
     setWhitelistOnlyState(user.whitelist_only);
-    setAllowedIps([...user.allowed_ips]);
+    setDevices([...user.devices]);
   }, []);
 
   const cancelEdit = useCallback(() => setEditing(null), []);
@@ -44,20 +45,19 @@ export function useUserEditForm(actions: UserEditActions) {
   const setWhitelistOnly = useCallback(
     async (on: boolean) => {
       if (!editing) return;
-      const ok = await actions.updateWhitelist(editing.user_id, on, allowedIps);
+      const ok = await actions.updateWhitelist(editing.user_id, on);
       if (ok) setWhitelistOnlyState(on);
     },
-    [editing, allowedIps, actions]
+    [editing, actions]
   );
 
-  const removeIp = useCallback(
-    async (ip: string) => {
+  const revokeDevice = useCallback(
+    async (deviceId: string) => {
       if (!editing) return;
-      const next = allowedIps.filter((entry) => entry !== ip);
-      const ok = await actions.updateWhitelist(editing.user_id, whitelistOnly, next);
-      if (ok) setAllowedIps(next);
+      const ok = await actions.revokeDevice(editing.user_id, deviceId);
+      if (ok) setDevices((current) => current.filter((device) => device.id !== deviceId));
     },
-    [editing, allowedIps, whitelistOnly, actions]
+    [editing, actions]
   );
 
   const submitEdit = useCallback(async () => {
@@ -84,9 +84,9 @@ export function useUserEditForm(actions: UserEditActions) {
     editing,
     form: { name, setName, email, setEmail, password, setPassword, roles, setRoles },
     whitelistOnly,
-    allowedIps,
+    devices,
     setWhitelistOnly,
-    removeIp,
+    revokeDevice,
     catalogue,
     busy,
     startEdit,

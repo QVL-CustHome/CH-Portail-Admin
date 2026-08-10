@@ -9,6 +9,7 @@ import {
   updateUserRoles,
   updateUserStatus,
   updateUserWhitelist,
+  revokeUserDevice,
   type AccountStatus,
   type AdminUser,
 } from "../api/admin";
@@ -112,9 +113,23 @@ export function useUsers() {
   );
 
   const updateWhitelist = useCallback(
-    async (id: string, whitelistOnly: boolean, allowedIps: string[]): Promise<boolean> => {
+    async (id: string, whitelistOnly: boolean): Promise<boolean> => {
       try {
-        await updateUserWhitelist(id, whitelistOnly, allowedIps);
+        await updateUserWhitelist(id, whitelistOnly);
+        await reload();
+        return true;
+      } catch (err) {
+        toastError(err);
+        return false;
+      }
+    },
+    [reload, toastError]
+  );
+
+  const revokeDevice = useCallback(
+    async (id: string, deviceId: string): Promise<boolean> => {
+      try {
+        await revokeUserDevice(id, deviceId);
         await reload();
         return true;
       } catch (err) {
@@ -137,6 +152,7 @@ export function useUsers() {
     assignRoles,
     changePassword,
     updateWhitelist,
+    revokeDevice,
     remove,
   };
 }

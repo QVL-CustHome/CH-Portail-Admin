@@ -25,11 +25,11 @@ import { statusTone } from "../lib/status";
 import { useUsers } from "../hooks/useUsers";
 import { useUserEditForm } from "../hooks/useUserEditForm";
 import UserRolesEditor from "../components/UserRolesEditor";
-import AllowedIpsList from "../components/AllowedIpsList";
+import UserDevicesList from "../components/UserDevicesList";
 
 export default function Users() {
   const { t } = useTranslation();
-  const { users, loading, loadError, toast, setToast, setStatus, editUser, assignRoles, changePassword, updateWhitelist, remove } =
+  const { users, loading, loadError, toast, setToast, setStatus, editUser, assignRoles, changePassword, updateWhitelist, revokeDevice, remove } =
     useUsers();
 
   const edit = useUserEditForm({
@@ -37,6 +37,7 @@ export default function Users() {
     assignRoles,
     changePassword,
     updateWhitelist,
+    revokeDevice,
     onUpdated: (name) =>
       setToast({ severity: "success", message: `${name} ${t("admin.users.updated")}` }),
   });
@@ -169,11 +170,22 @@ export default function Users() {
               checked={edit.whitelistOnly}
               onChange={edit.setWhitelistOnly}
               color="primary"
+              disabled={!edit.whitelistOnly && edit.devices.length === 0}
               label={t("admin.users.whitelistOnly")}
             />
           </Stack>
 
-          <AllowedIpsList allowedIps={edit.allowedIps} onRemoveIp={edit.removeIp} />
+          {!edit.whitelistOnly && edit.devices.length === 0 && (
+            <Typography component="span" color="text.secondary" variant="body2">
+              {t("admin.users.whitelistNeedsDevice")}
+            </Typography>
+          )}
+
+          <UserDevicesList
+            devices={edit.devices}
+            canRevoke={!edit.whitelistOnly || edit.devices.length > 1}
+            onRevoke={edit.revokeDevice}
+          />
         </Stack>
       </SidePanel>
 
