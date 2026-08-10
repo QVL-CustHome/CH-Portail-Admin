@@ -40,27 +40,37 @@ export default function UserDevicesList({ devices, canRevoke, onRevoke }: UserDe
             <Box
               key={device.id}
               sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.5rem",
                 borderRadius: "var(--ch-radius-sm)",
                 backgroundColor: "var(--ch-palette-surface-sunken)",
               }}
             >
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-                gap="sm"
-                padding="xs"
-              >
-                <Stack gap="xs">
-                  <Typography component="span" color="text.primary">
-                    {device.label || t("admin.users.unknownDevice")}
+              {/* minWidth 0 : sans lui, une adresse IPv6 refuse de se replier
+                  et pousse la croix hors de la carte sur mobile. */}
+              <Box sx={{ minWidth: 0, flex: 1 }}>
+                <Typography color="text.primary" noWrap>
+                  {device.label || t("admin.users.unknownDevice")}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {t("admin.users.deviceLastSeen")} {formatDate(device.last_seen, locale)}
+                </Typography>
+                {device.last_ip && (
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    component="div"
+                    sx={{ fontFamily: "monospace", overflowWrap: "anywhere" }}
+                  >
+                    {device.last_ip}
                   </Typography>
-                  <Typography component="span" color="text.secondary" variant="body2">
-                    {t("admin.users.deviceLastSeen")} {formatDate(device.last_seen, locale)}
-                    {device.last_ip ? ` · ${device.last_ip}` : ""}
-                  </Typography>
-                </Stack>
-                {canRevoke && (
+                )}
+              </Box>
+
+              {canRevoke && (
+                <Box sx={{ flexShrink: 0 }}>
                   <IconActionButton
                     icon="close"
                     variant="secondary"
@@ -68,8 +78,8 @@ export default function UserDevicesList({ devices, canRevoke, onRevoke }: UserDe
                     aria-label={`${t("admin.users.revokeDevice")} ${device.label}`}
                     onClick={() => onRevoke(device.id)}
                   />
-                )}
-              </Stack>
+                </Box>
+              )}
             </Box>
           ))}
         </Stack>

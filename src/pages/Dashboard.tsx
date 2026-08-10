@@ -39,14 +39,19 @@ export default function Dashboard() {
         onChange={handleRegistrationToggle}
       />
 
+      {/* La carte des comptes en attente n'apparaît que s'il y en a : une carte
+          qui annonce « aucun compte en attente » occupe la moitié du tableau de
+          bord pour ne rien dire. */}
       <CardGrid minItemWidth="26rem" gap="md">
         <TrafficCard />
-        <PendingUsersCard
-          users={pendingUsers}
-          loading={loading}
-          onApprove={(user) => void setStatus(user, "active")}
-          onDelete={(userId) => void remove(userId)}
-        />
+        {pendingUsers.length > 0 && (
+          <PendingUsersCard
+            users={pendingUsers}
+            loading={loading}
+            onApprove={(user) => void setStatus(user, "active")}
+            onDelete={(userId) => void remove(userId)}
+          />
+        )}
       </CardGrid>
 
       <Toast

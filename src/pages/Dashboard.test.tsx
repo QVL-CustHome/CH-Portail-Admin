@@ -78,12 +78,16 @@ describe("Dashboard", () => {
     expect(screen.getByText("Trafic")).toBeInTheDocument();
   });
 
-  it("affiche un message vide quand aucun compte n'est en attente", async () => {
+  // Une carte qui annonce « aucun compte en attente » occupe la moitié du
+  // tableau de bord pour ne rien dire : elle disparaît.
+  it("masque la carte quand aucun compte n'est en attente", async () => {
     vi.mocked(adminApi.listUsers).mockResolvedValue(
       listResponse([user({ user_id: "a1", name: "Alice Active", status: "active" })])
     );
     renderDashboard();
 
-    expect(await screen.findByText("Aucun compte en attente.")).toBeInTheDocument();
+    expect(await screen.findByText("Trafic")).toBeInTheDocument();
+    expect(screen.queryByText("Comptes en attente")).not.toBeInTheDocument();
+    expect(screen.queryByText("Aucun compte en attente.")).not.toBeInTheDocument();
   });
 });
