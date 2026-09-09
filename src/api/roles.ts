@@ -1,9 +1,9 @@
 import { request } from "./client";
 
-export type Portal = "admin" | "drive" | "budgy" | "home";
+export type Portal = "admin" | "drive" | "budgy" | "home" | "maloe";
 export type RoleKind = "portal" | "sub";
 
-export const PORTALS: Portal[] = ["admin", "drive", "budgy", "home"];
+export const PORTALS: Portal[] = ["admin", "drive", "budgy", "home", "maloe"];
 
 export interface Role {
   id: string;
