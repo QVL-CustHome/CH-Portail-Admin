@@ -12,7 +12,7 @@ export default function LegalLinks() {
       direction="row"
       gap="xs"
       alignItems="center"
-      label={t("admin.legal.footerLabel")}
+      ariaLabel={t("admin.legal.footerLabel")}
     >
       <Link href={cguUrl()} size="small" color="secondary">
         {t("admin.legal.cgu")}

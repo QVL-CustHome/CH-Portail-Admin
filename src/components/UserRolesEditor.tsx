@@ -20,13 +20,13 @@ export default function UserRolesEditor({ catalogue, roles, onToggleRole }: User
           <Box
             key={portal}
             sx={{
-              border: "0.0625rem solid var(--ch-palette-divider)",
-              borderRadius: "var(--ch-radius-md)",
+              border: "0.0625rem solid var(--canop-palette-divider)",
+              borderRadius: "var(--canop-radius-md)",
             }}
           >
             <Stack gap="sm" padding="sm">
               <Stack direction="row" alignItems="center" justifyContent="space-between" gap="md">
-                <Typography component="span" color="text.primary" fontWeight={600}>
+                <Typography component="span" color="text.primary" sx={{ fontWeight: 600 }}>
                   {t(`admin.portal.label.${portal}`)}
                 </Typography>
                 <Toggle

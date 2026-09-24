@@ -17,7 +17,7 @@ export default function RegistrationToggleCard({
   return (
     <Card>
       <Stack direction="row" alignItems="center" justifyContent="space-between" gap="md" wrap>
-        <Typography component="span" color="text.primary" fontWeight={600}>
+        <Typography component="span" color="text.primary" sx={{ fontWeight: 600 }}>
           {t("admin.dashboard.registrationToggle")}
         </Typography>
         <Toggle

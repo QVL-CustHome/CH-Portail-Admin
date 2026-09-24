@@ -5,7 +5,7 @@ import {
   Spinner,
   Stack,
   useTranslation,
-  type ChSegmentedControlOption,
+  type CanopSegmentedControlOption,
 } from "canopui";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
@@ -19,7 +19,7 @@ export default function TrafficCard() {
   const [period, setPeriod] = useState<TrafficPeriod>("week");
   const { data, loading, error } = useTraffic(period);
 
-  const periodOptions: ChSegmentedControlOption<TrafficPeriod>[] = PERIODS.map((p) => ({
+  const periodOptions: CanopSegmentedControlOption<TrafficPeriod>[] = PERIODS.map((p) => ({
     value: p,
     label: t(`admin.dashboard.period.${p}`),
   }));
@@ -46,12 +46,16 @@ export default function TrafficCard() {
               <Typography component="span" color="text.secondary">
                 {t("admin.dashboard.registrationsLabel")}
               </Typography>
-              <Typography component="span" color="text.primary" fontWeight={700} fontSize="1.25rem">
+              <Typography
+                component="span"
+                color="text.primary"
+                sx={{ fontWeight: 700, fontSize: "1.25rem" }}
+              >
                 {data.registrations}
               </Typography>
             </Stack>
 
-            <Typography component="span" color="text.primary" fontWeight={600}>
+            <Typography component="span" color="text.primary" sx={{ fontWeight: 600 }}>
               {t("admin.dashboard.connectedLabel")}
             </Typography>
             <Stack gap="xs">
@@ -66,7 +70,7 @@ export default function TrafficCard() {
                   <Typography component="span" color="text.primary">
                     {t(`admin.portal.label.${p.portal}`)}
                   </Typography>
-                  <Typography component="span" color="text.primary" fontWeight={600}>
+                  <Typography component="span" color="text.primary" sx={{ fontWeight: 600 }}>
                     {p.connected_users}
                   </Typography>
                 </Stack>

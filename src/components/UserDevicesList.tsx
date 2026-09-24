@@ -26,7 +26,7 @@ export default function UserDevicesList({ devices, canRevoke, onRevoke }: UserDe
 
   return (
     <Stack gap="sm">
-      <Typography component="span" color="text.primary" fontWeight={500}>
+      <Typography component="span" color="text.primary" sx={{ fontWeight: 500 }}>
         {t("admin.users.devices")}
       </Typography>
 
@@ -44,8 +44,8 @@ export default function UserDevicesList({ devices, canRevoke, onRevoke }: UserDe
                 alignItems: "center",
                 gap: "0.5rem",
                 padding: "0.5rem",
-                borderRadius: "var(--ch-radius-sm)",
-                backgroundColor: "var(--ch-palette-surface-sunken)",
+                borderRadius: "var(--canop-radius-sm)",
+                backgroundColor: "var(--canop-palette-surface-sunken)",
               }}
             >
               {/* minWidth 0 : sans lui, une adresse IPv6 refuse de se replier
@@ -74,8 +74,9 @@ export default function UserDevicesList({ devices, canRevoke, onRevoke }: UserDe
                   <IconActionButton
                     icon="close"
                     variant="secondary"
-                    size={28}
-                    aria-label={`${t("admin.users.revokeDevice")} ${device.label}`}
+                    size="1.75rem"
+                    iconSize="sm"
+                    ariaLabel={`${t("admin.users.revokeDevice")} ${device.label}`}
                     onClick={() => onRevoke(device.id)}
                   />
                 </Box>

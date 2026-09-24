@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { apiErrorMessage, useTranslation, type ChToastSeverity } from "canopui";
+import { apiErrorMessage, useTranslation, type CanopToastSeverity } from "canopui";
 import { ApiError } from "../api/client";
 import { createRole, deleteRole, listRoles, type CreateRoleInput, type Role } from "../api/roles";
 
 export interface RolesToast {
-  severity: ChToastSeverity;
+  severity: CanopToastSeverity;
   message: string;
 }
 

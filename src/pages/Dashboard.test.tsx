@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { ChI18nProvider, ChThemeProvider } from "canopui";
+import { CanopI18nProvider, CanopThemeProvider } from "canopui";
 import { defaultLocale, messages } from "../i18n/messages";
 import { CurrentUserProvider } from "../context/CurrentUser";
 import type { Me } from "../api/auth";
@@ -40,15 +40,15 @@ function listResponse(users: AdminUser[]) {
 
 function renderDashboard() {
   return render(
-    <ChI18nProvider locale={defaultLocale} messages={messages}>
-      <ChThemeProvider>
+    <CanopI18nProvider locale={defaultLocale} messages={messages}>
+      <CanopThemeProvider>
         <MemoryRouter>
           <CurrentUserProvider value={me}>
             <Dashboard />
           </CurrentUserProvider>
         </MemoryRouter>
-      </ChThemeProvider>
-    </ChI18nProvider>
+      </CanopThemeProvider>
+    </CanopI18nProvider>
   );
 }
 

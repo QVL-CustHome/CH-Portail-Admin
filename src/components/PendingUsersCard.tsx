@@ -5,7 +5,7 @@ import {
   DeleteButton,
   Stack,
   useTranslation,
-  type ChColumn,
+  type CanopColumn,
 } from "canopui";
 import type { AdminUser } from "../api/admin";
 
@@ -24,7 +24,7 @@ export default function PendingUsersCard({
 }: PendingUsersCardProps) {
   const { t } = useTranslation();
 
-  const columns: ChColumn<AdminUser>[] = [
+  const columns: CanopColumn<AdminUser>[] = [
     { key: "name", header: t("admin.users.col.name"), sortable: true },
   ];
 
@@ -37,17 +37,17 @@ export default function PendingUsersCard({
         loading={loading}
         emptyMessage={t("admin.dashboard.pendingEmpty")}
         stickyHeader
-        animateRows
+        animated
         enableKeyboardNav
         actionsHeader={t("admin.users.col.actions")}
         actions={(user) => (
           <Stack direction="row" gap="xs" justifyContent="end" wrap>
             <ApproveButton
-              aria-label={`${t("admin.dashboard.action.approve")} ${user.name}`}
+              ariaLabel={`${t("admin.dashboard.action.approve")} ${user.name}`}
               onClick={() => onApprove(user)}
             />
             <DeleteButton
-              aria-label={`${t("admin.users.action.delete")} ${user.name}`}
+              ariaLabel={`${t("admin.users.action.delete")} ${user.name}`}
               confirmTitle={t("admin.dashboard.cancelTitle")}
               confirmMessage={t("admin.users.deleteMessage")}
               confirmLabel={t("admin.confirm")}

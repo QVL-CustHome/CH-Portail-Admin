@@ -1,13 +1,13 @@
 import { useMemo } from "react";
-import { useTranslation, type ChIconColor, type ChIconName } from "canopui";
+import { useTranslation, type CanopIconColor, type CanopIconName } from "canopui";
 import type { AccountStatus, AdminUser } from "../api/admin";
 
 export interface DashboardStat {
   key: string;
   label: string;
   value: string;
-  icon: ChIconName;
-  iconColor: ChIconColor;
+  icon: CanopIconName;
+  iconColor: CanopIconColor;
 }
 
 export function useDashboardStats(users: AdminUser[]): DashboardStat[] {

@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
-import { PageScaffold, useTranslation, type ChNavbarItem } from "canopui";
+import { PageScaffold, useTranslation, type CanopNavbarItem } from "canopui";
 import { useCurrentUser } from "../context/current-user";
 import { logout } from "../api/auth";
 import { navigateTo } from "../lib/navigation";
@@ -12,7 +12,7 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const items: ChNavbarItem[] = [
+  const items: CanopNavbarItem[] = [
     { label: t("admin.nav.dashboard"), href: "/dashboard", icon: "apps" },
     { label: t("admin.nav.users"), href: "/users", icon: "user" },
     { label: t("admin.nav.roles"), href: "/roles", icon: "shield" },

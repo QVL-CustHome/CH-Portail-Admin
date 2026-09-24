@@ -16,7 +16,7 @@ import {
   Toast,
   Toggle,
   useTranslation,
-  type ChColumn,
+  type CanopColumn,
 } from "canopui";
 import Typography from "@mui/material/Typography";
 import type { AdminUser } from "../api/admin";
@@ -60,7 +60,7 @@ export default function Users() {
     edit.cancelEdit();
   };
 
-  const columns: ChColumn<AdminUser>[] = [
+  const columns: CanopColumn<AdminUser>[] = [
     { key: "name", header: t("admin.users.col.name"), sortable: true, width: "18%" },
     { key: "email", header: t("admin.users.col.email"), sortable: true, width: "24%", hideOnMobile: true },
     {
@@ -102,9 +102,9 @@ export default function Users() {
         title={t("admin.users.editTitle")}
         footer={
           <Stack direction="row" justifyContent="end" gap="sm">
-            <IconActionButton icon="save" aria-label={t("admin.save")} onClick={edit.submitEdit} disabled={edit.busy} />
+            <IconActionButton icon="save" ariaLabel={t("admin.save")} onClick={edit.submitEdit} disabled={edit.busy} />
             <DeleteButton
-              aria-label={t("admin.users.action.delete")}
+              ariaLabel={t("admin.users.action.delete")}
               confirmTitle={edit.editing ? `${t("admin.users.action.delete")} ${edit.editing.name} ?` : undefined}
               confirmMessage={t("admin.users.deleteMessage")}
               confirmLabel={t("admin.confirm")}
@@ -117,7 +117,7 @@ export default function Users() {
       >
         {edit.editing && (
           <Stack direction="row" alignItems="center" gap="sm">
-            <Typography component="span" color="text.primary" fontWeight={500}>
+            <Typography component="span" color="text.primary" sx={{ fontWeight: 500 }}>
               {t("admin.users.col.status")}
             </Typography>
             <StatusChip
@@ -163,7 +163,7 @@ export default function Users() {
 
         <Stack gap="md">
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap="md">
-            <Typography component="span" color="text.primary" fontWeight={500}>
+            <Typography component="span" color="text.primary" sx={{ fontWeight: 500 }}>
               {t("admin.users.whitelistOnly")}
             </Typography>
             <Toggle
@@ -192,8 +192,8 @@ export default function Users() {
       <Stack gap="md" fill>
         <Legend
           items={[
-            { status: "warning", label: t("admin.status.pending_validation") },
-            { status: "neutral", label: t("admin.status.disabled") },
+            { tone: "warning", label: t("admin.status.pending_validation") },
+            { tone: "neutral", label: t("admin.status.disabled") },
           ]}
         />
 
@@ -206,7 +206,7 @@ export default function Users() {
           fixedLayout
           stickyHeader
           fillHeight
-          animateRows
+          animated
           enableKeyboardNav
           actionsWidth="10%"
           rowSx={(u) =>
@@ -220,7 +220,7 @@ export default function Users() {
             <Stack direction="row" gap="xs" justifyContent="end" wrap>
               <IconActionButton
                 icon="pencil"
-                aria-label={t("admin.users.action.edit")}
+                ariaLabel={t("admin.users.action.edit")}
                 onClick={() => edit.startEdit(user)}
               />
             </Stack>

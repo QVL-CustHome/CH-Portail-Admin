@@ -11,7 +11,7 @@ import {
   Stack,
   Toast,
   useTranslation,
-  type ChBulletListItem,
+  type CanopBulletListItem,
 } from "canopui";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
@@ -59,15 +59,16 @@ export default function Roles() {
         {PORTALS.map((portal) => {
           const subs = subRolesFor(portal);
           const isAdding = addingPortal === portal;
-          const items: ChBulletListItem[] = subs.map((role) => ({
+          const items: CanopBulletListItem[] = subs.map((role) => ({
             key: role.id,
             content: role.name,
             action: (
               <IconActionButton
                 icon="trash"
                 variant="danger"
-                size={28}
-                aria-label={t("admin.roles.action.delete")}
+                size="1.75rem"
+                iconSize="sm"
+                ariaLabel={t("admin.roles.action.delete")}
                 onClick={() => del.request(role)}
               />
             ),
@@ -87,14 +88,14 @@ export default function Roles() {
                 <Stack direction="row" gap="xs">
                   <IconActionButton
                     icon="save"
-                    aria-label={t("admin.save")}
+                    ariaLabel={t("admin.save")}
                     onClick={() => void addSubRole(portal)}
                     disabled={busy}
                   />
                   <IconActionButton
                     icon="cancel"
                     variant="secondary"
-                    aria-label={t("admin.cancel")}
+                    ariaLabel={t("admin.cancel")}
                     onClick={cancelAdd}
                   />
                 </Stack>
@@ -118,7 +119,7 @@ export default function Roles() {
                 )}
                 {!isAdding && (
                   <AddButton
-                    aria-label={t("admin.roles.addSubRole")}
+                    ariaLabel={t("admin.roles.addSubRole")}
                     onClick={() => startAdd(portal)}
                   />
                 )}

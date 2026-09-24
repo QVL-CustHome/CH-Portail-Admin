@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ChI18nProvider, ChThemeProvider } from "canopui";
+import { CanopI18nProvider, CanopThemeProvider } from "canopui";
 import { defaultLocale, messages } from "../i18n/messages";
 import Users from "./Users";
 import * as adminApi from "../api/admin";
@@ -42,11 +42,11 @@ const subRole: rolesApi.Role = {
 
 function renderUsers() {
   return render(
-    <ChI18nProvider locale={defaultLocale} messages={messages}>
-      <ChThemeProvider>
+    <CanopI18nProvider locale={defaultLocale} messages={messages}>
+      <CanopThemeProvider>
         <Users />
-      </ChThemeProvider>
-    </ChI18nProvider>
+      </CanopThemeProvider>
+    </CanopI18nProvider>
   );
 }
 
