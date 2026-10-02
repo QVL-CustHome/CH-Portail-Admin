@@ -3,7 +3,7 @@
 Portail d'administration CustHome : gestion des utilisateurs (activation/désactivation,
 édition, suppression), workflow de validation des nouveaux comptes, et gestion des rôles.
 
-Front **React 19 + TypeScript + Vite**, basé sur le design system **`canopui`**,
+Front **React 19 + TypeScript + Vite**, basé sur le design system **`@canop/ui`**,
 servi par un serveur Node/Express qui proxifie `/api/*` vers l'**API Gateway**.
 
 ## Architecture
@@ -35,7 +35,7 @@ cp .env.example .env   # ajuster si besoin (PORT, GATEWAY_URL, VITE_AUTH_PORTAL_
 npm run dev            # http://localhost:3001
 ```
 
-Le portail attend l'API Gateway sur `http://localhost:8080`. Le design system `canopui`
+Le portail attend l'API Gateway sur `http://localhost:8080`. Le design system `@canop/ui`
 est un package hébergé (registry npm privé configuré dans `.npmrc`) : `npm install` le récupère,
 aucune synchronisation locale n'est nécessaire.
 
@@ -64,7 +64,7 @@ src/
 
 ## Design system CanopUI
 
-La dépendance `canopui` est déclarée en **`latest`** dans `package.json` : ce portail suit la
+La dépendance `@canop/ui` est déclarée en **`latest`** dans `package.json` : ce portail suit la
 dernière version publiée du design system, et il est **rebuild automatiquement au démarrage de
 la machine** si une CanopUI plus récente est parue (unité systemd `canopui-autorebuild`, qui
 redéclenche cette pipeline).

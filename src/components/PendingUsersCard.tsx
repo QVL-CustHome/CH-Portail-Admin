@@ -6,7 +6,7 @@ import {
   Stack,
   useTranslation,
   type CanopColumn,
-} from "canopui";
+} from "@canop/ui";
 import type { AdminUser } from "../api/admin";
 
 interface PendingUsersCardProps {

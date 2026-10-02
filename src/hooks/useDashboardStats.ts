@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTranslation, type CanopIconColor, type CanopIconName } from "canopui";
+import { useTranslation, type CanopIconColor, type CanopIconName } from "@canop/ui";
 import type { AccountStatus, AdminUser } from "../api/admin";
 
 export interface DashboardStat {

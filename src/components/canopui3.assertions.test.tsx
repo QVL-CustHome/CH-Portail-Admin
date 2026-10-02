@@ -3,7 +3,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactElement } from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { CanopApiError, CanopI18nProvider, CanopThemeProvider } from "canopui";
+import { CanopApiError, CanopI18nProvider, CanopThemeProvider } from "@canop/ui";
 import { defaultLocale, messages } from "../i18n/messages";
 import type { AdminUser, UserDevice } from "../api/admin";
 import { ApiError } from "../api/client";

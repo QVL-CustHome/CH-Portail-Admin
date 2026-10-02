@@ -12,7 +12,7 @@ import {
   Toast,
   useTranslation,
   type CanopBulletListItem,
-} from "canopui";
+} from "@canop/ui";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { PORTALS, type Portal, type Role } from "../api/roles";

@@ -1,4 +1,4 @@
-import { Checkbox, Stack, Toggle, useTranslation } from "canopui";
+import { Checkbox, Stack, Toggle, useTranslation } from "@canop/ui";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { PORTALS, type Role } from "../api/roles";

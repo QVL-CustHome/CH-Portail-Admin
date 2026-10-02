@@ -1,4 +1,4 @@
-import { Divider, Link, Stack, useTranslation } from "canopui";
+import { Divider, Link, Stack, useTranslation } from "@canop/ui";
 import { cguUrl } from "../lib/auth-redirect";
 
 const LEGAL_NOTICE_ANCHOR = "mentions-legales";

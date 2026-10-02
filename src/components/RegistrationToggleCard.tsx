@@ -1,4 +1,4 @@
-import { Card, Stack, Toggle, useTranslation } from "canopui";
+import { Card, Stack, Toggle, useTranslation } from "@canop/ui";
 import Typography from "@mui/material/Typography";
 
 interface RegistrationToggleCardProps {

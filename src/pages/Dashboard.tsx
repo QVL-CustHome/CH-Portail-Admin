@@ -1,4 +1,4 @@
-import { CardGrid, Feedback, PageContent, Toast, useTranslation } from "canopui";
+import { CardGrid, Feedback, PageContent, Toast, useTranslation } from "@canop/ui";
 import { useUsers } from "../hooks/useUsers";
 import { useRegistrationSetting } from "../hooks/useRegistrationSetting";
 import DashboardStats from "../components/DashboardStats";

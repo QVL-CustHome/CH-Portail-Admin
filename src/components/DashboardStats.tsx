@@ -1,4 +1,4 @@
-import { CardGrid, StatCard } from "canopui";
+import { CardGrid, StatCard } from "@canop/ui";
 import type { AdminUser } from "../api/admin";
 import { useDashboardStats } from "../hooks/useDashboardStats";
 

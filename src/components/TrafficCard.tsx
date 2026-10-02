@@ -6,7 +6,7 @@ import {
   Stack,
   useTranslation,
   type CanopSegmentedControlOption,
-} from "canopui";
+} from "@canop/ui";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import type { TrafficPeriod } from "../api/admin";

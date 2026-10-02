@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { CanopI18nProvider, CanopThemeProvider } from "canopui";
+import { CanopI18nProvider, CanopThemeProvider } from "@canop/ui";
 import { defaultLocale, messages } from "../i18n/messages";
 import Roles from "./Roles";
 import * as rolesApi from "../api/roles";

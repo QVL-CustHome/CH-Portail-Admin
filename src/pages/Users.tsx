@@ -17,7 +17,7 @@ import {
   Toggle,
   useTranslation,
   type CanopColumn,
-} from "canopui";
+} from "@canop/ui";
 import Typography from "@mui/material/Typography";
 import type { AdminUser } from "../api/admin";
 import { PORTALS } from "../api/roles";

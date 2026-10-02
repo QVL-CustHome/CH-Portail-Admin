@@ -1,4 +1,4 @@
-import { Button, Feedback, Heading, Layout, Stack, useTranslation } from "canopui";
+import { Button, Feedback, Heading, Layout, Stack, useTranslation } from "@canop/ui";
 import { navigateTo } from "../lib/navigation";
 import { loginUrl } from "../lib/auth-redirect";
 

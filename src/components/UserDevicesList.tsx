@@ -1,4 +1,4 @@
-import { IconActionButton, Stack, useTranslation } from "canopui";
+import { IconActionButton, Stack, useTranslation } from "@canop/ui";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { UserDevice } from "../api/admin";

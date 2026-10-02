@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { CanopI18nProvider, CanopThemeProvider } from "canopui";
+import { CanopI18nProvider, CanopThemeProvider } from "@canop/ui";
 import { defaultLocale, messages } from "../i18n/messages";
 import { CurrentUserProvider } from "../context/CurrentUser";
 import type { Me } from "../api/auth";
